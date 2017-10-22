@@ -18,9 +18,9 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 ## Table of Contents
 
   1. [PEP 20](#pep-20)
-  1. [Naming](#Naming)
-    1. [Whitespace](#Whitespace)
-    1. [Indentation](#Indentation)
+  1. [Naming](#naming)
+    1. [Whitespace](#whitespace)
+    1. [Indentation](#indentation)
     1. [Newlines](#newlines)
   1. [Line Length](#line-length)
   1. [Conditional Expressions](#conditional-expressions)
@@ -49,7 +49,37 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 
 ## PEP 20
 [The Zen Of Python](https://www.python.org/dev/peps/pep-0020/)
-[[link](#pep-20)]</sup>
+
+## Naming
+If you really want to be Pythonic, we recommend to first go over [PEP](https://www.python.org/dev/peps/pep-0008/) 8 to start with. We definately have some more to add.
+
+* Use snake_case for modules, methods and variables.
+* Use CamelCase for classes. (Keep acronyms like HTTP, RFC, XML uppercase.)
+* Use SCREAMING_SNAKE_CASE for other constants. Keep these always at top of the file right after imports
+* Names of predicate methods (methods that return a boolean value) should always start with is, does, has, or the likes.
+* Don't use name abbreviations (interpeter doesn't mind and it won't cost you with perfoemance):
+```python
+# bad
+params
+#good
+parameters
+
+# bad
+inst
+#good
+instance
+```
+
+
+* In general, Method & Generator names should not imply the underlying implementation
+
+```python
+def get_template_parameters
+```
+
+
+
+
 
 
 ## Main Contributers:
