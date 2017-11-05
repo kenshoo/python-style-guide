@@ -188,44 +188,69 @@ end
 End each file with a newline. Don't include multiple newlines at the end of a file.
 
 ## Conditional Expressions 
+
 ### Checking Truthy/Falsy 
+
 Prefer truthy/falsy checks vs comparing actual values.
+
+"truthy" values are all objects except 
+
+1. `False`
+1. `None`
+1. `0`
+1. `[]` empty lists
+1. `()` empty tuples
+1. `{}` empty dictionaries
+1. an object whose magic method `__bool__` returns falsey(in python 3)
+1. an object whose magic method `__nonzero__` returns falsey(in python 2)
+
 
 ```python
 # bad
 if value > 0:
     ...
 
-# bad
-if value is 0:
-    ...
-    
-# bad   
-if len(a_list) > 0:
-    ...
-    
-# bad
-val = None   
-if val is None:
-    ...
-
 # good
 if value:
+    ...
+
+# bad
+if value is 0:
     ...
     
 # good
 if not value:
     ...
     
+# bad   
+if len(a_list) > 0:
+    ...
+
 # good
 if a_list:
+    ...
+    
+# bad sometimes
+val = None   
+if val is None:
     ...
     
 # good
 val = None   
 if not val:
+    ...    
+```
+
+If you need to check an object if it is `None` and not falsey use the `is` operator
+
+```python
+# bad 
+if val == None:
     ...
     
+# good  
+if val is None:
+    ...   
 ```
 
 ### Single Line Conditionals 
@@ -282,14 +307,13 @@ Prefer if/else constructs in those cases.
 
 ```python
 # sinful
-x = val if some_condition else other_val if nested_condition  else something_else
+x = val if some_condition else other_val if nested_condition else something_else
 
 # good
 if some_condition:
     x = val
 else:
     x = other_val if nested_condition else something_else
-
 ```
 
 ### Forgiveness vs Permission 
@@ -308,25 +332,25 @@ if some_dict.has_key('a_key'):
 else:
     ...
 
-if val != 0:
-    10 / val
-
 # good
 try:
     do_something(some_dict['a_key'])
 exception KeyError:
     ...
 
+# bad
+if val != 0:
+    10 / val
+
+# good
 try:
    10 / val
 except ZeroDivisionError:
-    ...
-
-    
+    ...    
 ```
 
 ## Strings 
-Do not compare strings with ''is''.
+Do not compare strings with `is`.
 
 ''is'' has bugs when comparing with strings.
 
@@ -339,9 +363,9 @@ name == 'bob'
 ```
 
 ### Double vs single Quotes 
-Prefer double quotes ("b") when your string is multiple words or formatting.
+Prefer double quotes (`"hi bob"`) when your string has multiple words or when formatting.
 
-If the string is a single word use single quotes ('b').
+If the string is a single word use single quotes (`'bob'`).
 
 ### Concatenation 
 
@@ -601,7 +625,7 @@ For example when you don't want to return a collection or alter one.
 
 As seen here the for loop benchmarks as more efficient
 
-{{:devops:pythonportal:test_results.png?200|}}
+```{{:devops:pythonportal:test_results.png?200|}}```
 
 ```python
     def some(x):
@@ -682,28 +706,6 @@ def compare_interests(other_persons_interests):
 ```
 
 ### Tuples 
-Single element tuples should have a comma after first item
-
-This rule avoids unexpected behavior
-```python
-# Unexpected behavior
-print '{}'.format((9)) # => 9
-print '{}'.format((9,)) # => (9,)
-
-# Even worse
-x = (9)
-y = (9,)
-
-print '{}'.format(x) # => 9
-print '{}'.format(y) # => (9,)
-
-def action():
-    # Assumed to return a tuple with one string item
-    return ('Some cool string')
-
-print action().__class__ #=> <type 'str'>
-
-```
 
 Don't use implied tuples
 
@@ -731,6 +733,7 @@ print 'Put', 'spaces', 'between', 'these', 'words'
 ```
 
 # Imports There are several ways to import a module in python
+
 ```python
 1) import package.a           # Absolute import
 2) import package.a as a_mod  # Absolute import bound to different name
@@ -741,6 +744,7 @@ print 'Put', 'spaces', 'between', 'these', 'words'
 
 ### Do's   * Always prefer to use 1st syntax - **Absolute Imports**
   * Put all imports in a central module: In __init__.py
+
 ```python
 from . import a
 from . import b
@@ -748,9 +752,11 @@ from . import b
 
 It has two major flaws:\\ 
 it forces all the submodules to be imported, even if you're only using one or two, and you still can't look at any of the submodules and quickly see their dependencies at the top, you have to go sifting through functions.
+
 ### Don'ts * you shouldn't be using the 4th syntax, since it only works in python2 and runs the risk of clashing with other 3rd party modules.
 
 ## Classes 
+
 When defining a class who does not inherit give it ''object'' instead of nothing.
 
 Not every method should be accessed outside of the class.
@@ -788,11 +794,13 @@ def add(a,b):
 ## Functions/Methods 
 
 ### Closures 
+
 User-defined functions incur a layer of overhead that hurts performance.
 
 Therefore, lambdas and nested functions should be avoided (unless it promotes readability).
 
 ### Recursion 
+
 Python does not optimize for recursion.
 
 The for loop is, effectively, the same abstraction that recursion provides in functional programming languages.
@@ -897,6 +905,7 @@ except Exception:
 ```
 
 ### EAFP 
+
 **EAFP** = Easier to ask forgiveness than permission.
 
 As seen in conditions section, exception catching is preferred over checking an object before using.
@@ -906,15 +915,16 @@ Python's performance does not suffer when exception handling.
 Be careful not to abuse this rule in your flow control.
 
 ## Regular Expressions 
-Use raw strings (''r'.+' '') for regex values.
+
+Use raw strings (`r'.+'`) for regex values.
 
 Raw strings preserve escape characters.
 
 This will save you from unexpected behavior.
 
-Avoid star wild cards ''\*'', use plus ''+'' instead.
+Avoid star wild cards `*`, use plus `+` instead.
 
-Bugs are caused because ''\*'' also allows for zero occurrences.
+Bugs are caused because `*` also allows for zero occurrences.
 
 Complex regex should be compiled before using.
 the resulting variable's name should clearly define it's purpose.
