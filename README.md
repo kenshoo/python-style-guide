@@ -16,7 +16,7 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 **WORK IN PROGRESS. Please be patient.**
 
 ## Table of Contents
---> Fix all anchor links
+--> eyals - Fix all anchor links
   1. [PEP 20](#pep-20)
   1. [Naming](#naming) --> Avi
     1. [Whitespace](#whitespace)
@@ -31,21 +31,21 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
   1. [Strings](#strings) -->Avi
     1. [Double vs Single Quotes](#double-vs-single-quotes)
     1. [Concatenation](#concatenation)
-  1. [Collections](#collections) -->eyals
+  1. [Collections](#collections) -->Avi
     1. [Slice](#slice)
     1. [Comprehensions](#comprehensions)
     1. [Comprehensions](#comprehensions)
     1. [Builtin Functions](#builtin-functions)
     1. [Tuples](#Tuples)
     1. [Tuple vs List](#tuple-vs-list)
-  1. [Imports](#imports)
-  1. [Methods/Functions](#methods-functions)
+  1. [Imports](#imports) -->Avi
+  1. [Methods/Functions](#methods-functions) -->eyals
     1. [Closures](#closures)
     1. [Recursion](#recursion)
     1. [Arguments/Parameters](#arguments-parameters)
-  1. [Classes](#classes) 
-  1. [Exceptions](#exceptions)
-  1. [Regular Expressions](#exceptions)
+  1. [Classes](#classes) -->eyals
+  1. [Exceptions](#exceptions) -->Avi
+  1. [Regular Expressions](#exceptions) -->eyals
 
 ## PEP 20
 [The Zen Of Python](https://www.python.org/dev/peps/pep-0020/)
