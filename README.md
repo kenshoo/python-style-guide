@@ -16,7 +16,7 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 **WORK IN PROGRESS. Please be patient.**
 
 ## Table of Contents
-
+--> Fix all anchor links
   1. [PEP 20](#pep-20)
   1. [Naming](#naming)
     1. [Whitespace](#whitespace)
@@ -57,6 +57,8 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 
 In general:
 
+--> In general - All points should be bulleted.
+
 Use snake_case for modules, methods and variables.
 
 Use CamelCase for classes. (Keep acronyms like HTTP, RFC, XML uppercase.)
@@ -67,6 +69,8 @@ The names of predicate methods (methods that return a boolean value) should star
 
 The name of predicates should also be positive. (i.e. is_alive, is_empty versus is_not_dead, is_not_empty)
 
+
+--> Leave rule - but example needs to sit under "generators" section and here should be a linkPEP
 Generators (especially comprehension generators), iterators, and other lazy loading objects names should not imply the underlying implementation,
 but rather the result you expect. 
 
@@ -104,7 +108,7 @@ for parameters in stack_template_parameters(stack_files):
 
 ```
 
-
+--> Make this more understandable
 Name throwaway variables `_`(variables you don't need).
 
 ```python
