@@ -58,6 +58,7 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 In general:
 
 --> In general - All points should be bulleted.
+--> In general - All non-trivial examples should follow with an example
 
 Use snake_case for modules, methods and variables.
 
@@ -264,8 +265,8 @@ if val is None:
 ### Single Line Conditionals 
 
 You can use single line if statements when they are short and simple (like checking truthy statements).
-
-Don't use single lines when you using combined conditions.
+--> example of short and simple here
+Don't use single lines when you-->'re using combined conditions.
 
 ```python
 # bad
@@ -276,7 +277,7 @@ if condition and another_condition: return value
 
 # good
 if satisfied: return tip
-
+--> Another bullet - it is acceptable to use case like this
 # Acceptable switch case like conditioning
 if very_happy: return tip * 1.5 
 if angry: return lip
@@ -288,16 +289,18 @@ return tip
 
 Avoid the ternary statement except in cases where all expressions are extremely trivial.
 
-Avoid multiple conditions in ternaries.
+Avoid multiple conditions in ternaries. --> as Ternaries are best used with single conditions.
+--> example here
+Ternaries are best used with single conditions. --> remove
 
-Ternaries are best used with single conditions.
-
-However, do use the ternary operator over if/else/ constructs for single line conditionals.
+--> remove "However," do use the ternary operator over if/else/ constructs --> remove - for single line conditionals.
 
 ```python
 # bad
 return val if condition and other_condition else other_val
 
+
+--> example of "do use..." starts here
 # bad
 if some_condition:
     return val
@@ -325,8 +328,10 @@ else:
 ```
 
 ### Forgiveness vs Permission 
-It is 'Easier to ask for forgiveness than permission'.
+It is 'Easier to ask for forgiveness than permission'. --> Link here to relevant pep
 
+
+--> This description must be more concise - Let's rethink this
 When writing code that may fail because an attribute/key doesn't exist or another reason, don't check it first and then handle.
 
 Just assume it will work and catch the exception if not. 
@@ -358,7 +363,7 @@ except ZeroDivisionError:
 ```
 
 ## Strings 
-Do not compare strings with `is`.
+--> Avoid comparing Do not compare strings with `is`. --> as it has bugs with comparing.
 
 ''is'' has bugs when comparing with strings.
 
@@ -371,7 +376,7 @@ name == 'bob'
 ```
 
 ### Double vs single Quotes 
-Prefer double quotes (`"hi bob"`) when your string has multiple words or when formatting.
+--> In general favour double quotes (`"hi bob"`) over single quotes (`'hi bob'`) -->remove when your string has multiple words or when formatting.
 
 If the string is a single word use single quotes (`'bob'`).
 
