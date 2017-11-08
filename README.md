@@ -384,7 +384,7 @@ If the string is a single word use single quotes (`'bob'`).
 
 Prefer string formatting instead of string concatenation.
 
-Besides for being cleaner this optimizes performance (less work for GC)
+--> indent this - Besides for being cleaner this optimizes performance (less work for GC)
 
 ```python
 # bad
@@ -397,6 +397,8 @@ email_with_name = "{} <{}>".format(user.name, user.email)
 email_with_name = "{name} <{mail}>".format(name=user.name, mail=user.email)
 
 ```
+--> Do not use positional arguments
+
 
 Avoid using `+=` when you need to construct large data chunks. Instead, use `.join`.
 
@@ -414,7 +416,7 @@ for i in a_list:
 ## Collections 
 There are three major skills to apply to collections.
 
-slicing, comprehensions, and builtin functions.
+slicing, comprehensions, and builtin functions. --> Add anchors
 
 The purpose of this writing is to automatically associate our collection solutions with
 these three tools.
@@ -430,7 +432,7 @@ Pushing us away fro using code as such:
             my_new_list.append(i)
 
 ```
-
+--> For all collection examples - use good vs bad format
 ### Slice 
 slicing helps a lot, especially with strings.
 
@@ -438,7 +440,8 @@ slicing helps a lot, especially with strings.
     # Slice structure
     items[start:end:step]
 ```
-
+--> Add "avoid complex slciing as it is not readable enough
+--> If slicing is too complex use slice constructor 
 A slice can have up to three attributes.
 
 start - our starting index
@@ -452,7 +455,7 @@ step is interesting because it controls how to jump between items including dire
 i.e.
 
 ```python
-
+    --> 
     items[::-1] # list reversed
     range(10)[2::2] # return all even numbers
     items[4:1:-1] # starting at 5th position go backwards until 2nd position
@@ -473,7 +476,9 @@ i.e.
 
 #### list comprehension
 
-syntax is `[ with at least a for statement inside it ]`
+--> Remove all ranges(noisy)
+
+syntax is `[ with at least a for statement inside it ]` --> Not clear
 
 ```python
     [i for i in range(4)]
@@ -500,7 +505,7 @@ You can chain for loops but make it simple
 ```
 
 #### generator comprehensions aka lazy iteration 
-syntax is ''( with at least a for statement inside it )''
+syntax is ''( with at least a for statement inside it )'' -->not clear
 
 ```python
     ( i for i in range(4) )
@@ -510,6 +515,8 @@ You can do filtering, chaining, all the same things you can do with list compreh
 
 However, generators are lazy. Meaning they only evaluate and return a value upon call.
 
+
+--> This example must be simpler
 i.e.
 ```python
     numbers = range(1, 10)
