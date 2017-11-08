@@ -16,36 +16,36 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 **WORK IN PROGRESS. Please be patient.**
 
 ## Table of Contents
-
+--> eyals - Fix all anchor links
   1. [PEP 20](#pep-20)
-  1. [Naming](#naming)
+  1. [Naming](#naming) --> Avi
     1. [Whitespace](#whitespace)
     1. [Indentation](#indentation)
     1. [Newlines](#newlines)
   1. [Line Length](#line-length)
-  1. [Conditional Expressions](#conditional-expressions)
+  1. [Conditional Expressions](#conditional-expressions) --> eyals
     1. [Truthy vs.Falsy](#truthy-vs-falsy)
     1. [Single Line](#single-line)
     1. [Ternary](#ternary)
     1. [Forgiveness vs Permission](#forgiveness-vs-permission)
-  1. [Strings](#strings)
+  1. [Strings](#strings) -->Avi
     1. [Double vs Single Quotes](#double-vs-single-quotes)
     1. [Concatenation](#concatenation)
-  1. [Collections](#collections)
+  1. [Collections](#collections) -->Avi
     1. [Slice](#slice)
     1. [Comprehensions](#comprehensions)
     1. [Comprehensions](#comprehensions)
     1. [Builtin Functions](#builtin-functions)
     1. [Tuples](#Tuples)
     1. [Tuple vs List](#tuple-vs-list)
-  1. [Imports](#imports)
-  1. [Methods/Functions](#methods-functions)
+  1. [Imports](#imports) -->Avi
+  1. [Methods/Functions](#methods-functions) -->eyals
     1. [Closures](#closures)
     1. [Recursion](#recursion)
     1. [Arguments/Parameters](#arguments-parameters)
-  1. [Classes](#classes) 
-  1. [Exceptions](#exceptions)
-  1. [Regular Expressions](#exceptions)
+  1. [Classes](#classes) -->eyals
+  1. [Exceptions](#exceptions) -->Avi
+  1. [Regular Expressions](#exceptions) -->eyals
 
 ## PEP 20
 [The Zen Of Python](https://www.python.org/dev/peps/pep-0020/)
@@ -57,6 +57,9 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 
 In general:
 
+--> In general - All points should be bulleted.
+--> In general - All non-trivial examples should follow with an example
+
 Use snake_case for modules, methods and variables.
 
 Use CamelCase for classes. (Keep acronyms like HTTP, RFC, XML uppercase.)
@@ -67,6 +70,8 @@ The names of predicate methods (methods that return a boolean value) should star
 
 The name of predicates should also be positive. (i.e. is_alive, is_empty versus is_not_dead, is_not_empty)
 
+
+--> Leave rule - but example needs to sit under "generators" section and here should be a linkPEP
 Generators (especially comprehension generators), iterators, and other lazy loading objects names should not imply the underlying implementation,
 but rather the result you expect. 
 
@@ -104,7 +109,7 @@ for parameters in stack_template_parameters(stack_files):
 
 ```
 
-
+--> Make this more understandable
 Name throwaway variables `_`(variables you don't need).
 
 ```python
@@ -184,15 +189,17 @@ def transformorize(self,_car):
   return car
 end
 ```
+--> Missing example of testing break up. headline should be "Same for test files"
 
-End each file with a newline. Don't include multiple newlines at the end of a file.
+
+End each file with a -->single newline. Don't include multiple newlines at the end of a file.
 
 ## Conditional Expressions 
 
-### Checking Truthy/Falsy 
+### Checking Truthy/Fals-->ey 
 
 Prefer truthy/falsy checks vs comparing actual values.
-
+--> In python, All object are "Thruthy" except:
 "truthy" values are all objects except 
 
 1. `False`
@@ -201,9 +208,9 @@ Prefer truthy/falsy checks vs comparing actual values.
 1. `[]` empty lists
 1. `()` empty tuples
 1. `{}` empty dictionaries
-1. an object whose magic method `__bool__` returns falsey(in python 3)
-1. an object whose magic method `__nonzero__` returns falsey(in python 2)
-
+1. -->Aan object whose magic method `__bool__` returns falsey(in python 3)
+1. -->Aan object whose magic method `__nonzero__` returns falsey(in python 2)
+--> Add link to an explenation of what magic method is
 
 ```python
 # bad
@@ -230,7 +237,7 @@ if len(a_list) > 0:
 if a_list:
     ...
     
-# bad sometimes
+# bad sometimes --> addd "see next example"
 val = None   
 if val is None:
     ...
@@ -241,6 +248,8 @@ if not val:
     ...    
 ```
 
+--> description not good enough. Need to add an example of the danger in this bad implementation below
+--> For instance checking an empty list will return True
 If you need to check an object if it is `None` and not falsey use the `is` operator
 
 ```python
@@ -256,8 +265,8 @@ if val is None:
 ### Single Line Conditionals 
 
 You can use single line if statements when they are short and simple (like checking truthy statements).
-
-Don't use single lines when you using combined conditions.
+--> example of short and simple here
+Don't use single lines when you-->'re using combined conditions.
 
 ```python
 # bad
@@ -268,7 +277,7 @@ if condition and another_condition: return value
 
 # good
 if satisfied: return tip
-
+--> Another bullet - it is acceptable to use case like this
 # Acceptable switch case like conditioning
 if very_happy: return tip * 1.5 
 if angry: return lip
@@ -280,16 +289,18 @@ return tip
 
 Avoid the ternary statement except in cases where all expressions are extremely trivial.
 
-Avoid multiple conditions in ternaries.
+Avoid multiple conditions in ternaries. --> as Ternaries are best used with single conditions.
+--> example here
+Ternaries are best used with single conditions. --> remove
 
-Ternaries are best used with single conditions.
-
-However, do use the ternary operator over if/else/ constructs for single line conditionals.
+--> remove "However," do use the ternary operator over if/else/ constructs --> remove - for single line conditionals.
 
 ```python
 # bad
 return val if condition and other_condition else other_val
 
+
+--> example of "do use..." starts here
 # bad
 if some_condition:
     return val
@@ -317,8 +328,10 @@ else:
 ```
 
 ### Forgiveness vs Permission 
-It is 'Easier to ask for forgiveness than permission'.
+It is 'Easier to ask for forgiveness than permission'. --> Link here to relevant pep
 
+
+--> This description must be more concise - Let's rethink this
 When writing code that may fail because an attribute/key doesn't exist or another reason, don't check it first and then handle.
 
 Just assume it will work and catch the exception if not. 
@@ -350,7 +363,7 @@ except ZeroDivisionError:
 ```
 
 ## Strings 
-Do not compare strings with `is`.
+--> Avoid comparing Do not compare strings with `is`. --> as it has bugs with comparing.
 
 ''is'' has bugs when comparing with strings.
 
@@ -363,7 +376,7 @@ name == 'bob'
 ```
 
 ### Double vs single Quotes 
-Prefer double quotes (`"hi bob"`) when your string has multiple words or when formatting.
+--> In general favour double quotes (`"hi bob"`) over single quotes (`'hi bob'`) -->remove when your string has multiple words or when formatting.
 
 If the string is a single word use single quotes (`'bob'`).
 
@@ -371,7 +384,7 @@ If the string is a single word use single quotes (`'bob'`).
 
 Prefer string formatting instead of string concatenation.
 
-Besides for being cleaner this optimizes performance (less work for GC)
+--> indent this - Besides for being cleaner this optimizes performance (less work for GC)
 
 ```python
 # bad
@@ -384,6 +397,8 @@ email_with_name = "{} <{}>".format(user.name, user.email)
 email_with_name = "{name} <{mail}>".format(name=user.name, mail=user.email)
 
 ```
+--> Do not use positional arguments
+
 
 Avoid using `+=` when you need to construct large data chunks. Instead, use `.join`.
 
@@ -401,7 +416,7 @@ for i in a_list:
 ## Collections 
 There are three major skills to apply to collections.
 
-slicing, comprehensions, and builtin functions.
+slicing, comprehensions, and builtin functions. --> Add anchors
 
 The purpose of this writing is to automatically associate our collection solutions with
 these three tools.
@@ -417,7 +432,7 @@ Pushing us away fro using code as such:
             my_new_list.append(i)
 
 ```
-
+--> For all collection examples - use good vs bad format
 ### Slice 
 slicing helps a lot, especially with strings.
 
@@ -425,7 +440,8 @@ slicing helps a lot, especially with strings.
     # Slice structure
     items[start:end:step]
 ```
-
+--> Add "avoid complex slciing as it is not readable enough
+--> If slicing is too complex use slice constructor 
 A slice can have up to three attributes.
 
 start - our starting index
@@ -439,7 +455,7 @@ step is interesting because it controls how to jump between items including dire
 i.e.
 
 ```python
-
+    --> 
     items[::-1] # list reversed
     range(10)[2::2] # return all even numbers
     items[4:1:-1] # starting at 5th position go backwards until 2nd position
@@ -460,7 +476,9 @@ i.e.
 
 #### list comprehension
 
-syntax is `[ with at least a for statement inside it ]`
+--> Remove all ranges(noisy)
+
+syntax is `[ with at least a for statement inside it ]` --> Not clear
 
 ```python
     [i for i in range(4)]
@@ -487,7 +505,7 @@ You can chain for loops but make it simple
 ```
 
 #### generator comprehensions aka lazy iteration 
-syntax is ''( with at least a for statement inside it )''
+syntax is ''( with at least a for statement inside it )'' -->not clear
 
 ```python
     ( i for i in range(4) )
@@ -497,6 +515,8 @@ You can do filtering, chaining, all the same things you can do with list compreh
 
 However, generators are lazy. Meaning they only evaluate and return a value upon call.
 
+
+--> This example must be simpler
 i.e.
 ```python
     numbers = range(1, 10)
@@ -960,6 +980,9 @@ name.startswith('Bob')
 'qu' in word.lowercase()
 ```
 
+--> For advanced users
+--> magic method section
+--> Meta programming
 
 
 ## Main Contributers:
