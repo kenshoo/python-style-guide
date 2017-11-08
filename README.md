@@ -18,20 +18,20 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 ## Table of Contents
 --> Fix all anchor links
   1. [PEP 20](#pep-20)
-  1. [Naming](#naming)
+  1. [Naming](#naming) --> Avi
     1. [Whitespace](#whitespace)
     1. [Indentation](#indentation)
     1. [Newlines](#newlines)
   1. [Line Length](#line-length)
-  1. [Conditional Expressions](#conditional-expressions)
+  1. [Conditional Expressions](#conditional-expressions) --> eyals
     1. [Truthy vs.Falsy](#truthy-vs-falsy)
     1. [Single Line](#single-line)
     1. [Ternary](#ternary)
     1. [Forgiveness vs Permission](#forgiveness-vs-permission)
-  1. [Strings](#strings)
+  1. [Strings](#strings) -->Avi
     1. [Double vs Single Quotes](#double-vs-single-quotes)
     1. [Concatenation](#concatenation)
-  1. [Collections](#collections)
+  1. [Collections](#collections) -->eyals
     1. [Slice](#slice)
     1. [Comprehensions](#comprehensions)
     1. [Comprehensions](#comprehensions)
@@ -188,15 +188,17 @@ def transformorize(self,_car):
   return car
 end
 ```
+--> Missing example of testing break up. headline should be "Same for test files"
 
-End each file with a newline. Don't include multiple newlines at the end of a file.
+
+End each file with a -->single newline. Don't include multiple newlines at the end of a file.
 
 ## Conditional Expressions 
 
-### Checking Truthy/Falsy 
+### Checking Truthy/Fals-->ey 
 
 Prefer truthy/falsy checks vs comparing actual values.
-
+--> In python, All object are "Thruthy" except:
 "truthy" values are all objects except 
 
 1. `False`
@@ -205,9 +207,9 @@ Prefer truthy/falsy checks vs comparing actual values.
 1. `[]` empty lists
 1. `()` empty tuples
 1. `{}` empty dictionaries
-1. an object whose magic method `__bool__` returns falsey(in python 3)
-1. an object whose magic method `__nonzero__` returns falsey(in python 2)
-
+1. -->Aan object whose magic method `__bool__` returns falsey(in python 3)
+1. -->Aan object whose magic method `__nonzero__` returns falsey(in python 2)
+--> Add link to an explenation of what magic method is
 
 ```python
 # bad
@@ -234,7 +236,7 @@ if len(a_list) > 0:
 if a_list:
     ...
     
-# bad sometimes
+# bad sometimes --> addd "see next example"
 val = None   
 if val is None:
     ...
@@ -245,6 +247,8 @@ if not val:
     ...    
 ```
 
+--> description not good enough. Need to add an example of the danger in this bad implementation below
+--> For instance checking an empty list will return True
 If you need to check an object if it is `None` and not falsey use the `is` operator
 
 ```python
@@ -964,6 +968,9 @@ name.startswith('Bob')
 'qu' in word.lowercase()
 ```
 
+--> For advanced users
+--> magic method section
+--> Meta programming
 
 
 ## Main Contributers:
