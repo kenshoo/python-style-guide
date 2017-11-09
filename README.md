@@ -19,30 +19,30 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 
   1. [PEP 20](#pep-20)
   1. [Naming](#naming)
-    1. [Whitespace](#whitespace)
-    1. [Indentation](#indentation)
-    1. [Newlines](#newlines)
-  1. [Line Length](#line-length)
+     * [Code Layout](#code-layout)
+     * [Indentation](#indentation)
+     * [New Lines](#new-lines)
   1. [Conditional Expressions](#conditional-expressions)
-    1. [Truthy vs.Falsy](#truthy-vs-falsy)
-    1. [Single Line](#single-line)
-    1. [Ternary](#ternary)
-    1. [Forgiveness vs Permission](#forgiveness-vs-permission)
+     * [Truthy vs Falsey](#truthy-vs-falsey)
+     * [Single Line](#single-line)
+     * [Ternary](#ternary)
+     * [Forgiveness vs Permission](#forgiveness-vs-permission)
   1. [Strings](#strings)
-    1. [Double vs Single Quotes](#double-vs-single-quotes)
-    1. [Concatenation](#concatenation)
+     * [Double vs Single Quotes](#double-vs-single-quotes)
+     * [Concatenation](#concatenation)
   1. [Collections](#collections)
-    1. [Slice](#slice)
-    1. [Comprehensions](#comprehensions)
-    1. [Comprehensions](#comprehensions)
-    1. [Builtin Functions](#builtin-functions)
-    1. [Tuples](#Tuples)
-    1. [Tuple vs List](#tuple-vs-list)
+     * [Slice](#slice)
+     * [Comprehensions](#comprehensions)
+     * [Builtin Functions](#builtin-functions)
+     * [Tuples](#tuples)
+     * [Tuple vs List](#tuple-vs-list)
   1. [Imports](#imports)
-  1. [Methods/Functions](#methods-functions)
-    1. [Closures](#closures)
-    1. [Recursion](#recursion)
-    1. [Arguments/Parameters](#arguments-parameters)
+  1. [Methods/Functions](#methodsfunctions)
+     * [Closures](#closures)
+     * [Recursion](#recursion)
+     * [Arguments/Parameters](#argumentsparameters)
+     * [Parameter Passing](#parameter-passing)
+     * [Dynamic Parameter Expansion](#dynamic-parameter-expansion)
   1. [Classes](#classes) 
   1. [Exceptions](#exceptions)
   1. [Regular Expressions](#exceptions)
@@ -115,7 +115,7 @@ for _ in range(4):
 
 
 
-## Code lay-out
+## Code Layout
 
 ### Indentation 
   * Use soft-tabs with a four space-indent
@@ -189,7 +189,7 @@ End each file with a newline. Don't include multiple newlines at the end of a fi
 
 ## Conditional Expressions 
 
-### Checking Truthy/Falsy 
+### Truthy vs Falsey 
 
 Prefer truthy/falsy checks vs comparing actual values.
 
@@ -253,7 +253,7 @@ if val is None:
     ...   
 ```
 
-### Single Line Conditionals 
+### Single Line 
 
 You can use single line if statements when they are short and simple (like checking truthy statements).
 
@@ -276,7 +276,7 @@ return tip
 
 ```
 
-### Ternary statements 
+### Ternary 
 
 Avoid the ternary statement except in cases where all expressions are extremely trivial.
 
@@ -661,7 +661,35 @@ As seen here the for loop benchmarks as more efficient
         assert result == 123
 
 ```
-### Tuples vs list 
+
+### Tuples 
+
+Don't use implied tuples
+
+It isn't clear that implied tuples are tuples, so avoid them.
+Unless it's part of a DSL or multiple instantiation where our intentions are clear.
+
+```python
+# Bad
+a_tuple = 9,
+a_long_triple = 7, 8, 9
+
+# Good
+a, b, c = 7, 8, 9
+
+# Also good
+def return_triple():
+    return 7, 8, 9
+
+a, b, c = return_triple()
+
+# Good DSL examples
+assert False, 'This test was suppose to fail'
+
+print 'Put', 'spaces', 'between', 'these', 'words'
+```
+
+### Tuple vs list 
   * Prefer tuples to lists
 
 When deciding which collection type to use try to use a tuple (''(x,)''),
@@ -705,34 +733,8 @@ def compare_interests(other_persons_interests):
     return in_common
 ```
 
-### Tuples 
-
-Don't use implied tuples
-
-It isn't clear that implied tuples are tuples, so avoid them.
-Unless it's part of a DSL or multiple instantiation where our intentions are clear.
-
-```python
-# Bad
-a_tuple = 9,
-a_long_triple = 7, 8, 9
-
-# Good
-a, b, c = 7, 8, 9
-
-# Also good
-def return_triple():
-    return 7, 8, 9
-
-a, b, c = return_triple()
-
-# Good DSL examples
-assert False, 'This test was suppose to fail'
-
-print 'Put', 'spaces', 'between', 'these', 'words'
-```
-
-# Imports There are several ways to import a module in python
+## Imports 
+There are several ways to import a module in python
 
 ```python
 1) import package.a           # Absolute import
@@ -755,43 +757,7 @@ it forces all the submodules to be imported, even if you're only using one or tw
 
 ### Don'ts * you shouldn't be using the 4th syntax, since it only works in python2 and runs the risk of clashing with other 3rd party modules.
 
-## Classes 
-
-When defining a class who does not inherit give it ''object'' instead of nothing.
-
-Not every method should be accessed outside of the class.
-Therefore it is good practice to use private and protected methods. 
-
-Try to make classes as thin as possible.
-
-Functions which are not under the responsibilities of a class but their logic is used by the class should not be defined in the class. (RDD Responsibility Driven Development) 
-
-Just put the function in the surrounding scope.
-
-```python
-# bad
-class Person(object):
-    def eat(self, food):
-        ...
-        self.calories = self.add(self.calories, food.calories)
-        ...
-    
-    def add(self, a,b):
-        return a + b
-        
-# good
-class Person(object):
-    def eat(self, food):
-        ...
-        self.calories = add(self.calories, food.calories)
-        ...
-    
-def add(a,b):
-    return a + b 
-
-```
-
-## Functions/Methods 
+## Methods/Functions 
 
 ### Closures 
 
@@ -813,7 +779,7 @@ The for loop is, effectively, the same abstraction that recursion provides in fu
     arr = [unit.field for unit in a_list]
 ```
 
-### Argument Definition / Function signatures 
+### Arguments/Parameters 
 
 Your functions should have up to 3 parameters (not including self and kind).
 
@@ -878,6 +844,42 @@ save_file(file_name="myfile.txt", log=True)
 
 ### Dynamic Parameter Expansion 
 You can pass a dynamic list of parameters by using double splat syntax.
+
+
+## Classes 
+
+When defining a class who does not inherit give it ''object'' instead of nothing.
+
+Not every method should be accessed outside of the class.
+Therefore it is good practice to use private and protected methods. 
+
+Try to make classes as thin as possible.
+
+Functions which are not under the responsibilities of a class but their logic is used by the class should not be defined in the class. (RDD Responsibility Driven Development) 
+
+Just put the function in the surrounding scope.
+
+```python
+# bad
+class Person(object):
+    def eat(self, food):
+        ...
+        self.calories = self.add(self.calories, food.calories)
+        ...
+    
+    def add(self, a,b):
+        return a + b
+        
+# good
+class Person(object):
+    def eat(self, food):
+        ...
+        self.calories = add(self.calories, food.calories)
+        ...
+    
+def add(a,b):
+    return a + b 
+```
 
 
 ## Exceptions 
