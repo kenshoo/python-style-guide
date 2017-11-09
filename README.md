@@ -57,69 +57,47 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 
 In general:
 
-Use snake_case for modules, methods and variables.
-
-Use CamelCase for classes. (Keep acronyms like HTTP, RFC, XML uppercase.)
-
-Use SCREAMING_SNAKE_CASE for other constants.
-
-The names of predicate methods (methods that return a boolean value) should start with is, does, has, or the likes.
-
-The name of predicates should also be positive. (i.e. is_alive, is_empty versus is_not_dead, is_not_empty)
-
-Generators (especially comprehension generators), iterators, and other lazy loading objects names should not imply the underlying implementation,
-but rather the result you expect. 
+ * Use snake_case for modules, methods and variables.
+ * Use CamelCase for classes. (Keep acronyms like HTTP, RFC, XML uppercase.)
+ * Use SCREAMING_SNAKE_CASE for other constants.
+ * The names of predicate methods (methods that return a boolean value) should start with is, does, has, or the likes.
+ * The name of predicates should also be positive. (i.e. is_alive, is_empty versus is_not_dead, is_not_empty)
+ * Generators (especially comprehension generators), iterators, and other lazy loading objects names should not imply the underlying implementation,
+   but rather the result you expect. 
 
 ```python
 
 # bad
-generate_screaming_list = (word.upper() for word in ['a', 'list', 'of', 'words'])
+generate_screaming_list = (word.upper() for word in list_of_words)
 
 for word in generate_screaming_list:
     print(word)
     
 # good
-screaming_list = (word.upper() for word in ['a', 'list', 'of', 'words'])
+screaming_list = (word.upper() for word in list_of_words)
 
 for word in screaming_list:
     print(word)
-    
-# bad
-def build_stack_template_parameters(stack_files):
-    for file in stack_files:
-        if file.has_no_default:
-            yield file['parameters']
-            
-for parameters in build_stack_template_parameters(stack_files):
-    ...
-    
-
-# good
-def stack_template_parameters(stack_files):
-    for file in stack_files:
-        if file.has_no_default:
-            yield file['parameters']
-            
-for parameters in stack_template_parameters(stack_files):
-
 ```
 
 
-Name throwaway variables `_`(variables you don't need).
+ * Throwaway variables should named with an underscore (`_`).
+ * If you feel the need to describe the variable start the name with a variable.
 
 ```python
 for _ in range(4):
     print 'hi'
+
+for _number in range(4):
+    print('hi')
 ```
-
-
 
 
 ## Code Layout
 
-### Indentation 
-  * Use soft-tabs with a four space-indent
+### Indentation
 
+  * Use soft-tabs with a four space-indent
   * Align function parameters either all on the same line or one per line.
 
 ```python
@@ -153,9 +131,9 @@ def create_translation(
 ```
 
 ### New Lines 
-There should be two newlines after all your import statements.
 
-Don’t include newlines between areas of different indentation (such as around class or method bodies).
+ * There should be two newlines after all your import statements.
+ * Don’t include newlines between areas of different indentation (such as around class or method bodies).
 
 ```python
 # bad
@@ -170,7 +148,8 @@ class Foo(object):
         # body omitted
 ```
 
-Use a single empty line to break between statements to break up methods into logical paragraphs internally.
+ * Use a single empty line to break between statements to break up methods into logical paragraphs internally.
+
 ```python
 def transformorize(self,_car):
   car = manufacture(options)
@@ -185,13 +164,13 @@ def transformorize(self,_car):
 end
 ```
 
-End each file with a newline. Don't include multiple newlines at the end of a file.
+ * End each file with a newline. Don't include multiple newlines at the end of a file.
 
 ## Conditional Expressions 
 
 ### Truthy vs Falsey 
 
-Prefer truthy/falsy checks vs comparing actual values.
+ * Prefer truthy/falsy checks vs comparing actual values.
 
 "truthy" values are all objects except 
 
@@ -241,7 +220,7 @@ if not val:
     ...    
 ```
 
-If you need to check an object if it is `None` and not falsey use the `is` operator
+ * If you need to check an object if it is `None` and not falsey use the `is` operator
 
 ```python
 # bad 
@@ -255,9 +234,8 @@ if val is None:
 
 ### Single Line 
 
-You can use single line if statements when they are short and simple (like checking truthy statements).
-
-Don't use single lines when you using combined conditions.
+ * You can use single line if statements when they are short and simple (like checking truthy statements).
+ * Don't use single lines when you using combined conditions.
 
 ```python
 # bad
@@ -273,18 +251,13 @@ if satisfied: return tip
 if very_happy: return tip * 1.5 
 if angry: return lip
 return tip
-
 ```
 
 ### Ternary 
 
-Avoid the ternary statement except in cases where all expressions are extremely trivial.
-
-Avoid multiple conditions in ternaries.
-
-Ternaries are best used with single conditions.
-
-However, do use the ternary operator over if/else/ constructs for single line conditionals.
+ * Avoid the ternary statement except in cases where all expressions are extremely trivial.
+ * Avoid multiple conditions in ternaries.
+ * Use the ternary operator over if/else/ constructs for single line conditionals.
 
 ```python
 # bad
@@ -298,10 +271,9 @@ else:
 
 # good
 return val if some_condition else other_val
-
 ```
 
-This also means that ternary operators must not be nested.
+ * Do not nest ternary expressions.
 
 Prefer if/else constructs in those cases.
 
@@ -316,14 +288,13 @@ else:
     x = other_val if nested_condition else something_else
 ```
 
-### Forgiveness vs Permission 
+### Forgiveness vs Permission
+
 It is 'Easier to ask for forgiveness than permission'.
 
-When writing code that may fail because an attribute/key doesn't exist or another reason, don't check it first and then handle.
-
-Just assume it will work and catch the exception if not. 
-
-But make sure to catch the expected exception and not all exceptions.
+ * When writing code that may throw an exception do not check for that possibility.
+ * Assume it will work and catch the exception. 
+ * Make sure to catch the expected exception and not all exceptions.
 
 ```python
 # bad
@@ -349,8 +320,9 @@ except ZeroDivisionError:
     ...    
 ```
 
-## Strings 
-Do not compare strings with `is`.
+## Strings
+
+ * Do not compare strings with `is`.
 
 ''is'' has bugs when comparing with strings.
 
@@ -362,14 +334,15 @@ name is 'bob'
 name == 'bob'
 ```
 
-### Double vs single Quotes 
-Prefer double quotes (`"hi bob"`) when your string has multiple words or when formatting.
+### Double vs single Quotes
 
-If the string is a single word use single quotes (`'bob'`).
+ * Prefer double quotes when your string has multiple words or when formatting (`"hi bob"`).
+ * If the string is a single word use single quotes (`'bob'`).
 
 ### Concatenation 
 
-Prefer string formatting instead of string concatenation.
+ * Prefer string formatting over string concatenation.
+ * When formatting prefer mapped formatting ("hi {name}")
 
 Besides for being cleaner this optimizes performance (less work for GC)
 
@@ -385,7 +358,7 @@ email_with_name = "{name} <{mail}>".format(name=user.name, mail=user.email)
 
 ```
 
-Avoid using `+=` when you need to construct large data chunks. Instead, use `.join`.
+ * Avoid appending strings (`+=`) when you need to construct large data chunks. Instead, use `.join`.
 
 ```python
 # bad
@@ -395,10 +368,10 @@ for i in a_list:
     
 # good
 ''.join(i for in a_list)
- 
 ```
 
-## Collections 
+## Collections
+
 There are three major skills to apply to collections.
 
 slicing, comprehensions, and builtin functions.
@@ -418,7 +391,8 @@ Pushing us away fro using code as such:
 
 ```
 
-### Slice 
+### Slice
+
 slicing helps a lot, especially with strings.
 
 ```python
@@ -439,7 +413,6 @@ step is interesting because it controls how to jump between items including dire
 i.e.
 
 ```python
-
     items[::-1] # list reversed
     range(10)[2::2] # return all even numbers
     items[4:1:-1] # starting at 5th position go backwards until 2nd position
@@ -451,8 +424,7 @@ i.e.
 
     palindrome_check('hello olleh') # => True
     palindrome_check('noon') # => True
-    palindrome_check('joe') # => False
-    
+    palindrome_check('joe') # => False    
 ```
 
 
@@ -664,7 +636,7 @@ As seen here the for loop benchmarks as more efficient
 
 ### Tuples 
 
-Don't use implied tuples
+ * Don't use implied tuples
 
 It isn't clear that implied tuples are tuples, so avoid them.
 Unless it's part of a DSL or multiple instantiation where our intentions are clear.
@@ -734,40 +706,44 @@ def compare_interests(other_persons_interests):
 ```
 
 ## Imports 
+
 There are several ways to import a module in python
 
 ```python
 1) import package.a           # Absolute import
-2) import package.a as a_mod  # Absolute import bound to different name
+2) import package.a as a_mod  # Absolute import bound to an alias
 3) from package import a      # Alternate absolute import
 4) import a                   # Implicit relative import (deprecated, py2 only)
 5) from . import a            # Explicit relative import
 ```
 
-### Do's   * Always prefer to use 1st syntax - **Absolute Imports**
-  * Put all imports in a central module: In __init__.py
+### Do's
+
+ * Always prefer to use 1st syntax - **Absolute Imports**
+ * Put all imports in a central module: In __init__.py
 
 ```python
 from . import a
 from . import b
 ``` 
 
-It has two major flaws:\\ 
+It has two major flaws: 
 it forces all the submodules to be imported, even if you're only using one or two, and you still can't look at any of the submodules and quickly see their dependencies at the top, you have to go sifting through functions.
 
-### Don'ts * you shouldn't be using the 4th syntax, since it only works in python2 and runs the risk of clashing with other 3rd party modules.
+### Don'ts
+
+ * you shouldn't be using the 4th syntax, since it only works in python2 and runs the risk of clashing with other 3rd party modules.
 
 ## Methods/Functions 
 
 ### Closures 
 
-User-defined functions incur a layer of overhead that hurts performance.
-
-Therefore, lambdas and nested functions should be avoided (unless it promotes readability).
+ * User-defined functions incur a layer of overhead that hurts performance.
+ * Therefore, lambdas and nested functions should be avoided (unless it promotes readability).
 
 ### Recursion 
 
-Python does not optimize for recursion.
+ * Python does not optimize for recursion.
 
 The for loop is, effectively, the same abstraction that recursion provides in functional programming languages.
 
@@ -781,11 +757,9 @@ The for loop is, effectively, the same abstraction that recursion provides in fu
 
 ### Arguments/Parameters 
 
-Your functions should have up to 3 parameters (not including self and kind).
-
-Use splat args (\*args) and double splat keyword args (\*\*kwargs) in method definitions to reduce arguments. 
-
-Functions should not receive parameters that they are just suppose to pass to another function. 
+ * Your functions should have up to 3 parameters (not including self and kind).
+ * Use splat args (\*args) and double splat keyword args (\*\*kwargs) in method definitions to reduce arguments. 
+ * Functions should not receive parameters that they are just suppose to pass to another function. 
 
 If you see a parameter untouched being passed to a few functions, try to put that data into an object or closure who will be passed instead.
 
@@ -820,8 +794,9 @@ If you see a parameter untouched being passed to a few functions, try to put tha
             print "no key:{} to erase".format(key) 
 ```
 
-### Parameter Passing 
-It is best to be explicit when passing arguments.
+### Parameter Passing
+
+ * It is best to be explicit when passing arguments.
 
 Especially boolean options.
 
@@ -842,18 +817,15 @@ save_file("myfile.txt", log=True)
 save_file(file_name="myfile.txt", log=True)  
 ```
 
-### Dynamic Parameter Expansion 
-You can pass a dynamic list of parameters by using double splat syntax.
+### Dynamic Parameter Expansion
 
+ * You can pass a dynamic list of parameters by using double splat syntax.
 
 ## Classes 
 
-When defining a class who does not inherit give it ''object'' instead of nothing.
-
-Not every method should be accessed outside of the class.
-Therefore it is good practice to use private and protected methods. 
-
-Try to make classes as thin as possible.
+ * When defining a class who does not inherit pass `object` as it's inherit class.
+ * It is good practice to use private and protected methods. 
+ * Try to make classes as thin as possible.
 
 Functions which are not under the responsibilities of a class but their logic is used by the class should not be defined in the class. (RDD Responsibility Driven Development) 
 
@@ -884,7 +856,8 @@ def add(a,b):
 
 ## Exceptions 
 
-When catching exceptions, mention specific exceptions whenever possible instead of using a bare `except:` clause.
+ * Catch specific exceptions whenever possible
+ * Do not use a bare `except:` clause.
 
 ```python
 # bad
@@ -910,7 +883,7 @@ except Exception:
 
 **EAFP** = Easier to ask forgiveness than permission.
 
-As seen in conditions section, exception catching is preferred over checking an object before using.
+As seen in the conditions section, exception catching is preferred over checking an object before using.
 
 Python's performance does not suffer when exception handling.
 
@@ -918,35 +891,35 @@ Be careful not to abuse this rule in your flow control.
 
 ## Regular Expressions 
 
-Use raw strings (`r'.+'`) for regex values.
+ * Use single quote raw strings (`r'.+'`) for regex values.
 
 Raw strings preserve escape characters.
 
 This will save you from unexpected behavior.
 
-Avoid star wild cards `*`, use plus `+` instead.
+ * Avoid star wild cards `*`, use plus `+` instead.
 
 Bugs are caused because `*` also allows for zero occurrences.
 
-Complex regex should be compiled before using.
-the resulting variable's name should clearly define it's purpose.
+ * Complex regex should be compiled before using.
+
+The resulting variable's name should clearly define it's purpose.
 
 ```python
 # Bad
-result = re.match(r'(?:3[01])|(?:[0-2]\d)-(?:1[0-2])|(?:0\d)-\d{4}$', '31-11-1985')
-result.match('31-11-1985')
+pattern = re.match(r'(?:3[01])|(?:[0-2]\d)-(?:1[0-2])|(?:0\d)-\d{4}$', '31-11-1985')
+pattern.match('31-11-1985')
 
 # Good
 valid_date_pattern = re.compile(r'(?:3[01])|(?:[0-2]\d)-(?:1[0-2])|(?:0\d)-\d{4}$')
 valid_date_pattern.match('31-11-1985')
 ```
 
-### Usage 
-Regex is not preferable in python.
+### Usage
 
-Try to avoid using.
+ * Regex is not preferable in python.
 
-There are plenty of tools which are preferred (i.e. ''in'', ''startswith'', ''endswith'', ''isdigit'', ''istitle'', and more).
+There are plenty of tools which are preferred (i.e. `in`, `startswith`, `endswith`, `isdigit`, `istitle`, and more).
 
 ```python
 # Bad
