@@ -170,7 +170,7 @@ end
 
 ### Truthy vs Falsey 
 
- * Prefer truthy/falsy checks vs comparing actual values.
+ * Prefer truthy/falsey checks vs comparing actual values.
 
 "truthy" values are all objects except 
 
@@ -324,7 +324,8 @@ except ZeroDivisionError:
 
  * Do not compare strings with `is`.
 
-''is'' has bugs when comparing with strings.
+`is` has inconsistency when comparing strings.
+
 
 ```python
 # bad
@@ -332,6 +333,21 @@ name is 'bob'
 
 # good
 name == 'bob'
+```
+
+ * It is acceptable to compare with `is` when a global object is expected.
+
+```python
+BOB = 'bob'
+
+def get_name():
+    return BOB
+
+name = get_name()
+
+# acceptable
+if name is BOB:
+    ...
 ```
 
 ### Double vs single Quotes
@@ -661,10 +677,11 @@ assert False, 'This test was suppose to fail'
 print 'Put', 'spaces', 'between', 'these', 'words'
 ```
 
-### Tuple vs list 
-  * Prefer tuples to lists
+### Tuple vs list
 
-When deciding which collection type to use try to use a tuple (''(x,)''),
+  * Prefer tuples over lists
+
+When deciding which collection type to use prefer tuple,
 especially if that collection is not going to be changed.
 
 ```python
@@ -854,7 +871,9 @@ def add(a,b):
 ```
 
 
-## Exceptions 
+## Exceptions
+
+### Catching Exceptions
 
  * Catch specific exceptions whenever possible
  * Do not use a bare `except:` clause.
@@ -879,7 +898,7 @@ except Exception:
   # exception handling
 ```
 
-### EAFP 
+#### EAFP 
 
 **EAFP** = Easier to ask forgiveness than permission.
 
@@ -887,7 +906,57 @@ As seen in the conditions section, exception catching is preferred over checking
 
 Python's performance does not suffer when exception handling.
 
-Be careful not to abuse this rule in your flow control.
+ * Do not to abuse this rule in your flow control.
+
+Even though exception handling has been optimized in python do not use exceptioms for you flow control.
+
+```python
+# bad
+def action():
+    for i in items:
+        if i == UNWANTED_ITEM:
+            raise EXCEPTION("contains unwanted item")
+        else:
+            ...
+
+# good
+def action():
+    for i in items:
+        if i == wanted:
+            return "contains unwanted item"
+        else:
+            ...
+```
+
+ * Catch expected exceptions locally
+
+```python
+# bad
+def has_wanted_key(a_dict, wanted_key):
+    a_dict[wanted_key]
+    return True
+
+try:
+    has_wanted_key(a_dict, a_key)
+except KeyError:
+    ...
+
+# good
+def has_wanted_key(a_dict, wanted_key):
+    try:
+        a_dict[wanted_key]
+        return True
+    except KeyError:
+        return False
+
+has_wanted_key(a_dict, a_key)
+```
+
+### Custom Exceptions
+
+ * Exception names should end with the word Error (`MyCustomError`)
+ * Within a project define a base exception for all other custom exceptions to inherit from.
+ * All exceptions should be grouped together in an exceptions module `app.lib.exceptions.*`
 
 ## Regular Expressions 
 
