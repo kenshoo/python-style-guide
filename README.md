@@ -30,7 +30,7 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
   1. [Strings](#strings)
      * [Double vs Single Quotes](#double-vs-single-quotes)
      * [Concatenation](#concatenation)
-  1. [Collections](#collections)
+  1. [Collections/Iterables](#collectionsiterables)
      * [Slice](#slice)
      * [Comprehensions](#comprehensions)
      * [Builtin Functions](#builtin-functions)
@@ -49,7 +49,6 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 
 ## PEP 20
 [The Zen Of Python](https://www.python.org/dev/peps/pep-0020/)
-
 
 ## Naming 
 
@@ -170,7 +169,7 @@ end
 
 ### Truthy vs Falsey 
 
- * Prefer truthy/falsy checks vs comparing actual values.
+ * Prefer truthy/falsey checks vs comparing actual values.
 
 "truthy" values are all objects except 
 
@@ -324,7 +323,8 @@ except ZeroDivisionError:
 
  * Do not compare strings with `is`.
 
-''is'' has bugs when comparing with strings.
+`is` is inconsistent when comparing strings.
+
 
 ```python
 # bad
@@ -332,6 +332,21 @@ name is 'bob'
 
 # good
 name == 'bob'
+```
+
+ * It is acceptable to compare with `is` when a global object is expected.
+
+```python
+BOB = 'bob'
+
+def get_name():
+    return BOB
+
+name = get_name()
+
+# acceptable
+if name is BOB:
+    ...
 ```
 
 ### Double vs single Quotes
@@ -370,11 +385,11 @@ for i in a_list:
 ''.join(i for in a_list)
 ```
 
-## Collections
+## Collections/Iterables
 
 There are three major skills to apply to collections.
 
-slicing, comprehensions, and builtin functions.
+slicing, comprehensions, and utilizing builtin functions.
 
 The purpose of this writing is to automatically associate our collection solutions with
 these three tools.
@@ -414,8 +429,8 @@ i.e.
 
 ```python
     items[::-1] # list reversed
-    range(10)[2::2] # return all even numbers
-    items[4:1:-1] # starting at 5th position go backwards until 2nd position
+    range(100)[2::2] # return all even numbers
+    items[4::-1] # starting at 5th position go backwards
 
     def palindrome_check(s):
         midway, is_odd = divmod(len(s), 2)
@@ -427,102 +442,227 @@ i.e.
     palindrome_check('joe') # => False    
 ```
 
+#### Using Slice
+
+ * Use implicit values
+
+```python
+# bad
+end_of_list = len(a_list)
+a_list[2:end_of_list] 
+
+# good
+a_list[2:]
+
+# bad
+a_list[0:5]
+
+# good
+a_list[:5]
+
+# bad
+reversed = a_list[0:end_of_list:-1]
+
+# good
+reversed = a_list[::-1]
+```
+
+ * Do not compromise readability when using slice 
+
+Consider using `slice` constructor
+
+```python
+numbers = range(100)
+
+# bad
+numbers[2::2] # => all even numbers starting from 2
+
+# good
+even_numbers = slice(2, None, 2)
+
+numbers[even_numbers] # => all even numbers starting from 2
+```
 
 ### Comprehensions 
 
 #### list comprehension
 
-syntax is `[ with at least a for statement inside it ]`
+Syntax is:
 
 ```python
-    [i for i in range(4)]
+[i for i in numbers]
 ```
 
-Mapping
+ * Prefer to use list comprehension when mapping
 
 ```python
-    [mul(2, i) for i in range(4)]
+# bad
+result = []
+for i in numbers:
+    result.append(i * 2)
+
+# bad
+result = map(lambda i: i * 2, numbers)
+
+# good
+result = [i * 2 for i in numbers]
 ```
 
-You should filter with list comprehension
+ * Prefer to filter with list comprehension
 
 ```python
-    [i for i in range(4) if i % 2 == 1]
+# bad
+odd_numbers = []
+for i in numbers:
+    if i % 2 == 1:
+      odd_numbers.append(i)
+
+# not preferred
+is_odd = lambda i: i % 2 == 1
+odd_numbers = filter(is_odd, numbers)
+
+# good
+is_odd = lambda i: i % 2 == 1
+odd_numbers = [i for i in numbers if is_odd(i)]
 ```
 
-You can chain for loops but make it simple
+ * Keep logic out of comprehension statements (use callables)
 
 ```python
-    [j for i in range(4) for j in range(i)]
+# bad
+odd_numbers = [i for i in numbers if i % 2 == 1]
 
-    [j for i in range(10) if i % 2 == 0 for j in range(i)]
+# good
+is_odd = lambda i: i % 2 == 1
+odd_numbers = [i for i in numbers if is_odd(i)]
 ```
 
-#### generator comprehensions aka lazy iteration 
-syntax is ''( with at least a for statement inside it )''
+#### Chaining
+
+ * No more than a depth of 3
+ * Use new lines to maintain readability
 
 ```python
-    ( i for i in range(4) )
+groups [
+    ["sara", "sally", "bob"],
+    ["todd", "gary", "jon"],
+    ["sue", "jerry", "bob"]
+]
+
+# still bad
+people = []
+for group in groups:
+    for person in group:
+        people.append(person)
+
+# good        
+people = [person for group in groups for person in group]
+
+# acceptable
+people_who_know_bob = [person for group in groups if "bob" in group for person in group]
+
+# better
+people_who_know_bob = [person
+                       for group in groups
+                       if "bob" in group
+                       for person in group]
 ```
 
-You can do filtering, chaining, all the same things you can do with list comprehension.
+ * Consider using generators to maintain readability
+
+```python
+groups [
+    ["sara", "sally", "bob"],
+    ["todd", "gary", "jon"],
+    ["sue", "jerry", "bob"]
+]
+
+# best
+groups_with_bob = (group for group in groups if "bob" in group)
+
+people_who_know_bob = [person for person in groups_with_bob]
+```
+
+#### Generator Statements aka lazy iteration
+
+syntax is:
+
+```python
+(i for i in a_list)
+```
+
+Generator statements allows filtering, chaining, and all the same results list comprehension can accomplish.
 
 However, generators are lazy. Meaning they only evaluate and return a value upon call.
 
-i.e.
+ * Always prefer generator statements over temporary list construction
+
+Many times we construct lists just to produce another list in order to use that list.
+
+Generators reduce how many times we iterate over the same object.
+
 ```python
-    numbers = range(1, 10)
+groups [
+    ["sara", "sally", "bob"],
+    ["todd", "gary", "jon"],
+    ["sue", "jerry", "bob"]
+]
 
-    def check_odd(n):
-        print n
-        return n % 2 == 0
+def invite_bobs_friends(people):
+    for person in people:
+        invite(person)
 
-    non_lazy = [check_odd(i) for i in numbers]
-    # print 1
-    # print 2
-    # print 3
-    # print 4
-    # print 5
-    # print 6
-    # print 7
-    # print 8
-    # print 9
-    # executed check_odd nine times
+# bad
+people_who_know_bob = [person
+                       for group in groups
+                       if "bob" in group
+                       for person in group]
 
-    any(non_lazy) # => True
-    
-    lazy = (check_odd(i) for i in numbers)
-    # didn't execute check_odd yet
+people_who_know_bob_excluding_bob = [person for person in people_who_know_bob if person != 'bob']
 
-    any(lazy) # => True
-    # print 1
-    # print 2
-    # executed check_odd twice
+invite_bobs_friends(people_who_know_bob_excluding_bob)
 
+# good
+people_who_know_bob = (person
+                       for group in groups
+                       if "bob" in group
+                       for person in group)
+
+
+people_who_know_bob_excluding_bob = (person for person in people_who_know_bob if person != 'bob')
+
+invite_bobs_friends(people_who_know_bob_excluding_bob)
 ```
 
+### Builtin functions
 
-### Builtin functions 
 There are builtin functions that satisfy most use cases with collections (lists, tuples,
 dicts, sets, etc).
 
-Actions on collections like sorting, value checking, and creating new unique lists can be done with builtins.
+Actions on collections like sorting, value checking, and creating new unique lists can accomplished with builtins.
 
-Refrain from using reduce, map, and filter.
-
-Python's for loops where optimized for high performance (it's comprehension even more so).
+However, Python's for loops where optimized for high performance (comprehension even more so).
 
 Python is not optimized for function calling and recursion.
 
-This means a regular for loop may out perform recursive solutions.
+This means a regular for loop may out perform a recursive solution.
 
+Considering this, we prefer loops over functional methods like map and filter.
+
+This rule is not iron clad.
+
+Functional programming is greatly beneficial from a design standpoint.
+
+There are many third party libraries dedicated to functional programming.
+
+There are also many `builtins` that have the best of both, becasue they can accept comprehension statements.
 
 Here is a list of useful builtin functions:
 
-  * all - checks if all values are truthy
-  * any - checks if any value is truthy
+  1. all - checks if all values are truthy
+  1. any - checks if any value is truthy
 
-all and any check if all or any values in list or iterable are truthy
+`all` and `any` check if all or any values in an iterable are truthy
 
 ```python
     all([1,2,0]) # => False
@@ -531,49 +671,83 @@ all and any check if all or any values in list or iterable are truthy
     any([0,9,0]) # => True
     any([])  # => False
 
-    # Very useful with generator comprehensions
-    any((i for i in numbers if i % 2 == 0))
+    # Very useful with comprehension statement
+    any(i for i in numbers if is_even(i))
 
 ```
 
-  * enumerate - iterate with accompanying climbing value
+ * Be careful when using `all`
+
+All returns `True` when given an empty list or a generator that yields nothing.
 
 ```python
-    for index, name in enumerate(['bob', 'joe', 'sam']):
-        print 'index:', index
-        print 'name:', name
+numbers_over_4 = (i for i in range(4) if i > 6) # => yields no values
+all(numbers_over_4) # => True
 ```
 
-  * filter - filters a list
-```python
-    filter(lambda i: i % 2, range(10))
-```
+ * When asserting values prefer not to use `all`. Instead use regular `for` loop. 
 
-  * map - creates a list based on values of another list
-```python
-    map(lambda i: i * 10), range(10))
-
-    # apply two lists to function that takes two parameters 
-    map(lambda i,j: i + j, range(1,10), range(100,109))
-```
-
-  * max | min - gets max or min value of list
-  * sum - adds the values (should be int) of list
-  * reduce - with logic creates a single value from list values
-  * set - distinct list
-  * sorted - sorts values of collection
-  * in - finds item in collection
+`assert all` hides which value failed.
 
 ```python
-    s = 'bob says hi'
+# sexy but bad
+assert all(value for value in a_list)
 
-    def check_says_hi(quote):
-        return 'says hi' in quote
+# good
+for value in a_list:
+    assert value
 
+# better
+for value in a_list:
+    assert value, "bonus descriptive message about {}".format(value)
 ```
-* in is not a builtin function per say rather a very useful operator
 
-Look at the documentation https://docs.python.org/2/library/functions.html
+  1. enumerate - iterate with accompanying climbing value
+
+```python
+for index, name in enumerate(['bob', 'joe', 'sam']):
+    print 'index:', index
+    print 'name:', name
+```
+
+  1. filter - filters a list
+
+In python3 filter produces an iterator
+
+```python
+filter(lambda i: i % 2, range(10))
+```
+
+  1. map - creates a list based on values of another list
+
+There is no reason to use map unless you want to map two iterables with a function that would accept two parameters (one from each iterable).
+
+Even then you can probably get the same result using `zip`.
+
+```python
+# bad
+map(lambda i: i * 10), numbers)
+
+# prefer
+[i * 10 for i in numbers]
+
+# acceptable
+# apply two lists to function that takes two parameters
+add = lambda i,j: i + j
+map(add, numbers1, numbers2)
+
+# consider
+[sum(values) for values in zip(numbers1, numbers2)]
+```
+
+  1. max | min - gets max or min value of list
+  1. sum - adds the values (should be int) of list
+  1. reduce - with logic creates a single value from list values
+  1. set - distinct list
+  1. sorted - sorts values of collection
+  1. in - finds item in collection (`in` is a operator)
+
+Look at the documentation [Python3 Builtins](https://docs.python.org/3/library/functions.html)
 
 Most of the these builtin functions and others accept a comprehension statement.
 
@@ -584,61 +758,19 @@ Add on that the ability to filter and map.
 Therefore, using comprehension syntax is always preferred.
 
 ```python
-    ' '.join(word for word in speech if allowed(word)) 
+' '.join(word for word in speech if allowed(word))
 
-    any(word for word in speech if allowed(word))
-
+any(word for word in speech if allowed(word))
 ```
 
-
-Please Note this doesn't mean never use for loops.
-Sometimes a for loop is more appropriate. 
-For example when you don't want to return a collection or alter one.
-
-As seen here the for loop benchmarks as more efficient
-
-```{{:devops:pythonportal:test_results.png?200|}}```
-
-```python
-    def some(x):
-        x + x + x *20
-
-    def comp():
-        [some(i) for i in xrange(1000) if i % 2]
-
-    def mapp():
-        map(lambda i: some(i) if i % 2 else '', xrange(1000))
-
-    def for_loop():
-        for i in xrange(1000):
-            if i % 2:
-                some(i)
-
-    def test_comp(benchmark):
-        # benchmark something
-        result = benchmark(comp)
-
-        assert result == 123
-
-    def test_mapp(benchmark):
-        # benchmark something
-        result = benchmark(mapp)
-
-        assert result == 123
-
-    def test_for_loo(benchmark):
-        # benchmark something
-        result = benchmark(for_loop)
-
-        assert result == 123
-
-```
+For more tools used for manipulating iterables checkout [Itertools](https://docs.python.org/3.5/library/itertools.html)
 
 ### Tuples 
 
  * Don't use implied tuples
 
 It isn't clear that implied tuples are tuples, so avoid them.
+
 Unless it's part of a DSL or multiple instantiation where our intentions are clear.
 
 ```python
@@ -661,10 +793,11 @@ assert False, 'This test was suppose to fail'
 print 'Put', 'spaces', 'between', 'these', 'words'
 ```
 
-### Tuple vs list 
-  * Prefer tuples to lists
+### Tuple vs list
 
-When deciding which collection type to use try to use a tuple (''(x,)''),
+  * Prefer tuples over lists
+
+When deciding which collection type to use prefer tuple,
 especially if that collection is not going to be changed.
 
 ```python
@@ -717,22 +850,28 @@ There are several ways to import a module in python
 5) from . import a            # Explicit relative import
 ```
 
-### Do's
+ * Avoid implicit relative import
 
- * Always prefer to use 1st syntax - **Absolute Imports**
- * Put all imports in a central module: In __init__.py
+You shouldn't be using implicit relative import (4th syntax), since it only works in python2 and runs the risk of clashing with other 3rd party modules.
+
+ * Import only what you need not the entire module
+
+This is preferred because it is easier to mock without side effects.
+
+Plus, it makes the current working module lighter, since it doesn't contain another whole module within itself. 
 
 ```python
-from . import a
-from . import b
-``` 
+# not the best
+import os
 
-It has two major flaws: 
-it forces all the submodules to be imported, even if you're only using one or two, and you still can't look at any of the submodules and quickly see their dependencies at the top, you have to go sifting through functions.
+os.path(...)
 
-### Don'ts
+# good
+from os import path
 
- * you shouldn't be using the 4th syntax, since it only works in python2 and runs the risk of clashing with other 3rd party modules.
+path(...)
+
+```
 
 ## Methods/Functions 
 
@@ -854,7 +993,9 @@ def add(a,b):
 ```
 
 
-## Exceptions 
+## Exceptions
+
+### Catching Exceptions
 
  * Catch specific exceptions whenever possible
  * Do not use a bare `except:` clause.
@@ -879,7 +1020,7 @@ except Exception:
   # exception handling
 ```
 
-### EAFP 
+#### EAFP 
 
 **EAFP** = Easier to ask forgiveness than permission.
 
@@ -887,7 +1028,57 @@ As seen in the conditions section, exception catching is preferred over checking
 
 Python's performance does not suffer when exception handling.
 
-Be careful not to abuse this rule in your flow control.
+ * Do not to abuse this rule in your flow control.
+
+Even though exception handling has been optimized in python do not use exceptions for you flow control.
+
+```python
+# bad
+def action():
+    for i in items:
+        if i == UNWANTED_ITEM:
+            raise EXCEPTION("contains unwanted item")
+        else:
+            ...
+
+# good
+def action():
+    for i in items:
+        if i == wanted:
+            return "contains unwanted item"
+        else:
+            ...
+```
+
+ * Catch expected exceptions locally
+
+```python
+# bad
+def has_wanted_key(a_dict, wanted_key):
+    a_dict[wanted_key]
+    return True
+
+try:
+    has_wanted_key(a_dict, a_key)
+except KeyError:
+    ...
+
+# good
+def has_wanted_key(a_dict, wanted_key):
+    try:
+        a_dict[wanted_key]
+        return True
+    except KeyError:
+        return False
+
+has_wanted_key(a_dict, a_key)
+```
+
+### Custom Exceptions
+
+ * Exception names should end with the word Error (`MyCustomError`)
+ * Within a project define a base exception for all other custom exceptions to inherit from.
+ * All exceptions should be grouped together in an exceptions module `app.lib.exceptions.*`
 
 ## Regular Expressions 
 
@@ -934,7 +1125,6 @@ name.startswith('Bob')
 
 'qu' in word.lowercase()
 ```
-
 
 
 ## Main Contributers:
