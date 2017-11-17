@@ -18,11 +18,14 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 ## Table of Contents
 
   1. [PEP 20](#pep-20)
+  1. [Genaral](#general)
   1. [Naming](#naming)
-     * [Code Layout](#code-layout)
+  1. [Code Layout](#code-layout)
      * [Indentation](#indentation)
+     * [White Spaces](#white-spaces)
      * [New Lines](#new-lines)
   1. [Conditional Expressions](#conditional-expressions)
+     * [Flow](#flow)
      * [Truthy vs Falsey](#truthy-vs-falsey)
      * [Single Line](#single-line)
      * [Ternary](#ternary)
@@ -49,6 +52,14 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
 
 ## PEP 20
 [The Zen Of Python](https://www.python.org/dev/peps/pep-0020/)
+
+## General
+
+ * Prefer python 3 over python 2
+ * Don't explain code with comments
+
+Instead of a writing a comment explaining the code, place the code into a function whose name explains your intent.
+
 
 ## Naming 
 
@@ -129,6 +140,25 @@ def create_translation(
 
 ```
 
+### White Spaces
+
+ * Avoid extraneous whitespaces within parentehses, brackets, and braces.
+ * Preferred not to use multiple white spaces during assignment
+
+```python
+# bad
+long_name = 'str'
+a         = 9
+b         = 8
+
+# good
+long_name = 'str'
+a = 9
+b = 8
+```
+
+ * Keyword arguments and default values should not contain whitespaces
+
 ### New Lines 
 
  * There should be two newlines after all your import statements.
@@ -166,6 +196,86 @@ end
  * End each file with a newline. Don't include multiple newlines at the end of a file.
 
 ## Conditional Expressions 
+
+### Flow
+
+ * `if/else` blocks should handle the least amount of logic first
+
+```python
+# bad
+if reason:
+    x = get_value()
+    y = x * 10
+    # code
+    # code
+    # code
+    return x
+else:
+    return 10
+
+# good
+if not reason:
+    return 10
+else:
+    x = get_value()
+    y = x * 10
+    # code
+    # code
+    # code
+    return x
+```
+
+ * So too, single line jumps/flow control disruption should not be handled in an `else` scope
+
+```python
+# bad
+for i in items:
+    if condition:
+        # code
+        # code
+    else:
+        break /return
+
+# good
+for i in items:
+    if condition:
+        break / return
+
+    # code
+    # code
+
+# bad
+if condition:
+    # code
+    # code
+else:
+    raise Exception
+
+# good
+if condition:
+    raise Exception
+
+# code
+# code
+
+
+```
+
+ * Avoid nesting `if` statements.
+ * If nesting is needed never more than 2 levels of nesting.
+ * Place `and` / `or` keywords at the end lines when using a line break.
+
+```python
+# bad
+if (name == 'bob'
+    and l_name == 'samuels'):
+    ...
+
+# good
+if (name == 'bob' and
+    l_name == 'samuels'):
+    ...
+```
 
 ### Truthy vs Falsey 
 
@@ -840,6 +950,19 @@ def compare_interests(other_persons_interests):
 
 ## Imports 
 
+ * Imports should be at the top of a file
+ * Imports should be grouped by standard library, third party libraries, and local application.
+
+```python
+import os
+import sys
+
+import flask
+from retrying import retry
+
+from app.lib.klass import Klass
+``` 
+
 There are several ways to import a module in python
 
 ```python
@@ -854,11 +977,14 @@ There are several ways to import a module in python
 
 You shouldn't be using implicit relative import (4th syntax), since it only works in python2 and runs the risk of clashing with other 3rd party modules.
 
- * Import only what you need not the entire module
+ * Import what you need not the entire module
 
-This is preferred because it is easier to mock without side effects.
+Doing so avoids unwanted side effects, especially when mocking in tests.
 
-Plus, it makes the current working module lighter, since it doesn't contain another whole module within itself. 
+It also makes the current working module lighter, since it doesn't contain another whole module within itself.
+
+If you want to avoid name clashing or the namespace's name adds to understanding intent, then use aliasing.
+
 
 ```python
 # not the best
@@ -871,8 +997,35 @@ from os import path
 
 path(...)
 
+# super
+from os import path as os_path
 ```
 
+ * Refrain from using wild card, `*`, imports
+
+It improves readability when we use explicit imports
+
+ * Prefer single import statement with multiple objects when they come from the same module
+
+```python
+# not the best
+from os import path
+from os import environ
+
+# good
+from os import path, environ
+```  
+
+ * Do not import multiple unrelated modules in single import statement
+
+```python
+# bad
+import os, sys
+
+# good
+import os
+import sys
+``` 
 ## Methods/Functions 
 
 ### Closures 
