@@ -9,7 +9,7 @@ This is Kenshoo's Python Style Guide. Using this style guide we hope to acheive 
 We **DO NOT** wish the following:
 1. Say/claim/Imply there is a "right" or "wrong" way to do it.
 1. Claim this style guide is inclusive.
-1. Introduce ourselves as some kind of language "experts". 
+1. Introduce ourselves as some kind of language "experts".
 
 Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb)'s Style-Guide "style" :-).
 
@@ -68,7 +68,7 @@ It therefore reflects our own conclusions and preferences.
 Instead of a writing a comment explaining the code, place the code into a function whose name explains your intent.
 
 
-## Naming 
+## Naming
 
 [PEP 8 naming convention](https://www.python.org/dev/peps/pep-0008/#id36)
 
@@ -80,7 +80,7 @@ In general:
  * The names of predicate methods (methods that return a boolean value) should start with is, does, has, or the likes.
  * The name of predicates should also be positive. (i.e. is_alive, is_empty versus is_not_dead, is_not_empty)
  * Generators (especially comprehension generators), iterators, and other lazy loading objects names should not imply the underlying implementation,
-   but rather the result you expect. 
+   but rather the result you expect.
 
 ```python
 
@@ -89,7 +89,7 @@ generate_screaming_list = (word.upper() for word in list_of_words)
 
 for word in generate_screaming_list:
     print(word)
-    
+
 # good
 screaming_list = (word.upper() for word in list_of_words)
 
@@ -166,7 +166,7 @@ b = 8
 
  * Keyword arguments and default values should not contain whitespaces
 
-### New Lines 
+### New Lines
 
  * There should be two newlines after all your import statements.
  * Don’t include newlines between areas of different indentation (such as around class or method bodies).
@@ -174,10 +174,10 @@ b = 8
 ```python
 # bad
 class Foo(object):
-    
+
     def bar(self):
         # body omitted
-        
+
 # good
 class Foo(object):
     def bar(self):
@@ -202,7 +202,7 @@ end
 
  * End each file with a newline. Don't include multiple newlines at the end of a file.
 
-## Conditional Expressions 
+## Conditional Expressions
 
 ### Flow
 
@@ -284,11 +284,11 @@ if (name == 'bob' and
     ...
 ```
 
-### Truthy vs Falsey 
+### Truthy vs Falsey
 
  * Prefer truthy/falsey checks vs comparing actual values.
 
-"truthy" values are all objects except 
+"truthy" values are all objects except
 
 1. `False`
 1. `None`
@@ -312,43 +312,43 @@ if value:
 # bad
 if value is 0:
     ...
-    
+
 # good
 if not value:
     ...
-    
-# bad   
+
+# bad
 if len(a_list) > 0:
     ...
 
 # good
 if a_list:
     ...
-    
+
 # bad sometimes
-val = None   
+val = None
 if val is None:
     ...
-    
+
 # good
-val = None   
+val = None
 if not val:
-    ...    
+    ...
 ```
 
  * If you need to check an object if it is `None` and not falsey use the `is` operator
 
 ```python
-# bad 
+# bad
 if val == None:
     ...
-    
-# good  
+
+# good
 if val is None:
-    ...   
+    ...
 ```
 
-### Single Line 
+### Single Line
 
  * You can use single line if statements when they are short and simple (like checking truthy statements).
  * Don't use single lines when you using combined conditions.
@@ -364,12 +364,12 @@ if condition and another_condition: return value
 if satisfied: return tip
 
 # Acceptable switch case like conditioning
-if very_happy: return tip * 1.5 
+if very_happy: return tip * 1.5
 if angry: return lip
 return tip
 ```
 
-### Ternary 
+### Ternary
 
  * Avoid the ternary statement except in cases where all expressions are extremely trivial.
  * Avoid multiple conditions in ternaries.
@@ -409,7 +409,7 @@ else:
 It is 'Easier to ask for forgiveness than permission'.
 
  * When writing code that may throw an exception do not check for that possibility.
- * Assume it will work and catch the exception. 
+ * Assume it will work and catch the exception.
  * Make sure to catch the expected exception and not all exceptions.
 
 ```python
@@ -433,7 +433,7 @@ if val != 0:
 try:
    10 / val
 except ZeroDivisionError:
-    ...    
+    ...
 ```
 
 ## Strings
@@ -471,7 +471,7 @@ if name is BOB:
  * Prefer double quotes when your string has multiple words or when formatting (`"hi bob"`).
  * If the string is a single word use single quotes (`'bob'`).
 
-### Concatenation 
+### Concatenation
 
  * Prefer string formatting over string concatenation.
  * When formatting prefer mapped formatting ("hi {name}")
@@ -497,7 +497,7 @@ email_with_name = "{name} <{mail}>".format(name=user.name, mail=user.email)
 statement = ''
 for i in a_list:
     statement += i
-    
+
 # good
 ''.join(i for in a_list)
 ```
@@ -556,7 +556,7 @@ i.e.
 
     palindrome_check('hello olleh') # => True
     palindrome_check('noon') # => True
-    palindrome_check('joe') # => False    
+    palindrome_check('joe') # => False
 ```
 
 #### Using Slice
@@ -566,7 +566,7 @@ i.e.
 ```python
 # bad
 end_of_list = len(a_list)
-a_list[2:end_of_list] 
+a_list[2:end_of_list]
 
 # good
 a_list[2:]
@@ -584,7 +584,7 @@ reversed = a_list[0:end_of_list:-1]
 reversed = a_list[::-1]
 ```
 
- * Do not compromise readability when using slice 
+ * Do not compromise readability when using slice
 
 Consider using `slice` constructor
 
@@ -600,7 +600,7 @@ even_numbers = slice(2, None, 2)
 numbers[even_numbers] # => all even numbers starting from 2
 ```
 
-### Comprehensions 
+### Comprehensions
 
 #### list comprehension
 
@@ -723,7 +723,7 @@ for group in groups:
     for person in group:
         people.append(person)
 
-# good        
+# good
 people = [person for group in groups for person in group]
 
 # better
@@ -806,7 +806,7 @@ numbers_over_4 = (i for i in range(4) if i > 6) # => yields no values
 all(numbers_over_4) # => True
 ```
 
- * When asserting values prefer not to use `all`. Instead use regular `for` loop. 
+ * When asserting values prefer not to use `all`. Instead use regular `for` loop.
 
 `assert all` hides which value failed.
 
@@ -886,7 +886,7 @@ any(word for word in speech if allowed(word))
 
 For more tools used for manipulating iterables checkout [Itertools](https://docs.python.org/3.5/library/itertools.html)
 
-### Tuples 
+### Tuples
 
  * Don't use implied tuples
 
@@ -959,7 +959,7 @@ def compare_interests(other_persons_interests):
     return in_common
 ```
 
-## Imports 
+## Imports
 
  * Imports should be at the top of a file
  * Imports should be grouped by standard library, third party libraries, and local application.
@@ -972,7 +972,7 @@ import flask
 from retrying import retry
 
 from app.lib.klass import Klass
-``` 
+```
 
 There are several ways to import a module in python
 
@@ -1025,7 +1025,7 @@ from os import environ
 
 # good
 from os import path, environ
-```  
+```
 
  * Do not import multiple unrelated modules in single import statement
 
@@ -1036,7 +1036,7 @@ import os, sys
 # good
 import os
 import sys
-``` 
+```
 ## Methods/Functions/Callables
 
 See [class functions](#class-methods) as well.
@@ -1046,45 +1046,45 @@ Checkout [Builtin Functions For Collections](#builtin-functions-for-collections)
  * A callable's body should be no more than four statements.
  * Predicate methods are encouraged.
 
-### Arguments/Parameters 
+### Arguments/Parameters
 
  * Your functions should have up to 3 parameters (not including self and kind).
  * Use packing syntax (\*args, \*\*kwargs) in method declarations to reduce arguments.
 
 `def func_declaration(*args, **kwargs): pass`
 
- * Parameters that are only received to pass to other functions should be reduced. 
+ * Parameters that are only received to pass to other functions should be reduced.
 
 If you see a parameter untouched being passed to a few functions, try to put that data into an object or closure who will be passed instead.
 
 ```python
-    # Bad        
+    # Bad
     def funk1(container, key, erase=True):
         # Do some other actions
         funk2(container, key, erase)
-        
+
     def funk2(container, key, erase):
         if erase:
             try:
                 del container[key]
             except KeyError:
-                print "no key:{} to erase".format(key) 
+                print "no key:{} to erase".format(key)
 
 
     funk1(container, key)
 
-    # Good        
+    # Good
     def funk1(container, key, erase=True):
         # Do some other actions
         def erase_later():
             if erase: del container[key]
         funk2(erase_later)
-        
+
     def funk2(action):
         try:
             action()
         except KeyError:
-            print "no key:{} to erase".format(key) 
+            print "no key:{} to erase".format(key)
 
 
     funk1(container, key)
@@ -1124,7 +1124,7 @@ save_file("myfile.txt", True)
 save_file("myfile.txt", log=True)
 
 # Better
-save_file(file_name="myfile.txt", log=True)  
+save_file(file_name="myfile.txt", log=True)
 ```
 
 ### Dynamic Parameter Expansion
@@ -1163,13 +1163,13 @@ from operator import mul
 mul(5,5)
 ```
 
-### Recursion 
+### Recursion
 
  * Avoid recursion.
 
 The for loop is, effectively, the same abstraction that recursion provides in functional programming languages.
 
-## Classes 
+## Classes
 
  * When defining a class who does not inherit pass `object` as it's inherit class.
  * Avoid class attributes. Attributes should be limited to the scope of instances.
@@ -1188,7 +1188,7 @@ class Klass(object):
     # Private
     def __private_method(self):
         self.__private_attribute
-    
+
 ```
 
  * It is bad practice to add attributes to an instance from outside of that class.
@@ -1213,9 +1213,9 @@ pete.give_name('Peter')
 
 As mentioned [above](#classes), use conventions of encapsulation when defining class methods.
 
- * Prefer to define private static methods outside of the class in the surrounding scope.  
+ * Prefer to define private static methods outside of the class in the surrounding scope.
 
-Functions whom are just implementaion details should not be defined in the class. (RDD Responsibility Driven Development) 
+Functions whom are just implementaion details should not be defined in the class. (RDD Responsibility Driven Development)
 
 Just put the function in the surrounding scope.
 
@@ -1226,27 +1226,27 @@ class Person(object):
         ...
         self.calories = self._add(self.calories, food.calories)
         ...
-    
+
     @staticmethod
     def _add(a, b):
         return a + b
 
 pete = Person()
 pete._add(11, 12) # => 23
-        
+
 # good
 class Person(object):
     def eat(self, food):
         ...
         self.calories = _add(self.calories, food.calories)
         ...
-    
+
 def _add(a,b):
     return a + b
 
 pete = Person()
 pete._add(11, 12) # => AttributeError
-```
+
 
 ## Exceptions
 
@@ -1275,7 +1275,7 @@ except Exception:
   # exception handling
 ```
 
-#### EAFP 
+#### EAFP
 
 **EAFP** = Easier to ask forgiveness than permission.
 
@@ -1335,7 +1335,7 @@ has_wanted_key(a_dict, a_key)
  * Within a project define a base exception for all other custom exceptions to inherit from.
  * All exceptions should be grouped together in an exceptions module `app.lib.exceptions.*`
 
-## Regular Expressions 
+## Regular Expressions
 
  * Use single quote raw strings (`r'.+'`) for regex values.
 
@@ -1381,7 +1381,15 @@ name.startswith('Bob')
 'qu' in word.lowercase()
 ```
 
+## Metaprogramming
 
+In python you can use features like:
+
+1. Building classes on the fly
+1. Monkey patching
+1. Ghost attributes (Ghost methods)
+ * Avoid using these features.
+ * 
 ## Main Contributers:
 * [Avraf](https://github.com/avraf)
 * [Eyalstoler](https://github.com/eyalstoler)
