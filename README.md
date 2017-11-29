@@ -36,26 +36,29 @@ Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb
   1. [Collections/Iterables](#collectionsiterables)
      * [Slice](#slice)
      * [Comprehensions](#comprehensions)
-     * [Builtin Functions](#builtin-functions)
+     * [Builtin Functions For Collections](#builtin-functions-for-collections)
      * [Tuples](#tuples)
      * [Tuple vs List](#tuple-vs-list)
   1. [Imports](#imports)
-  1. [Methods/Functions](#methodsfunctions)
-     * [Closures](#closures)
-     * [Recursion](#recursion)
+  1. [Methods, Functions, and Callables](#methodsfunctionscallables)
      * [Arguments/Parameters](#argumentsparameters)
      * [Parameter Passing](#parameter-passing)
      * [Dynamic Parameter Expansion](#dynamic-parameter-expansion)
-  1. [Classes](#classes) 
+     * [Lambdas and Nested Functions](#lambdas-and-nested-functions)
+     * [Recursion](#recursion)
+  1. [Classes](#classes)
+     * [Class Methods](#class-methods)
   1. [Exceptions](#exceptions)
-  1. [Regular Expressions](#exceptions)
+     * [Catching Exceptions](#catching-exceptions)
+     * [EAFP](#eafp)
+     * [Custom Exceptions](#custom-exceptions)
+  1. [Regular Expressions](#regular-expressions)
 
 ## PEP 20
 [The Zen Of Python](https://www.python.org/dev/peps/pep-0020/)
 
 ## General
 
- * Prefer python 3 over python 2
  * Don't explain code with comments
 
 Instead of a writing a comment explaining the code, place the code into a function whose name explains your intent.
@@ -647,52 +650,6 @@ is_odd = lambda i: i % 2 == 1
 odd_numbers = [i for i in numbers if is_odd(i)]
 ```
 
-#### Chaining
-
- * No more than a depth of 3
- * Use new lines to maintain readability
-
-```python
-groups [
-    ["sara", "sally", "bob"],
-    ["todd", "gary", "jon"],
-    ["sue", "jerry", "bob"]
-]
-
-# still bad
-people = []
-for group in groups:
-    for person in group:
-        people.append(person)
-
-# good        
-people = [person for group in groups for person in group]
-
-# acceptable
-people_who_know_bob = [person for group in groups if "bob" in group for person in group]
-
-# better
-people_who_know_bob = [person
-                       for group in groups
-                       if "bob" in group
-                       for person in group]
-```
-
- * Consider using generators to maintain readability
-
-```python
-groups [
-    ["sara", "sally", "bob"],
-    ["todd", "gary", "jon"],
-    ["sue", "jerry", "bob"]
-]
-
-# best
-groups_with_bob = (group for group in groups if "bob" in group)
-
-people_who_know_bob = [person for person in groups_with_bob]
-```
-
 #### Generator Statements aka lazy iteration
 
 syntax is:
@@ -744,7 +701,57 @@ people_who_know_bob_excluding_bob = (person for person in people_who_know_bob if
 invite_bobs_friends(people_who_know_bob_excluding_bob)
 ```
 
-### Builtin functions
+#### Chaining Iterations
+
+ * Use new lines to maintain readability
+ * Avoid using over 2 statements within list comprehension
+
+```python
+groups [
+    ["sara", "sally", "bob"],
+    ["todd", "gary", "jon"],
+    ["sue", "jerry", "bob"]
+]
+
+# still bad
+people = []
+for group in groups:
+    for person in group:
+        people.append(person)
+
+# good        
+people = [person for group in groups for person in group]
+
+# better
+people = [person for group in groups
+          for person in group]
+
+# hard to follow
+people_who_know_bob = [person for group in groups if "bob" in group for person in group]
+
+# better but still hard to follow
+people_who_know_bob = [person
+                       for group in groups
+                       if "bob" in group
+                       for person in group]
+```
+
+ * Consider using generators to maintain readability
+
+```python
+groups [
+    ["sara", "sally", "bob"],
+    ["todd", "gary", "jon"],
+    ["sue", "jerry", "bob"]
+]
+
+# best
+groups_with_bob = (group for group in groups if "bob" in group)
+
+people_who_know_bob = [person for person in groups_with_bob]
+```
+
+### Builtin Functions For Collections
 
 There are builtin functions that satisfy most use cases with collections (lists, tuples,
 dicts, sets, etc).
@@ -1026,39 +1033,28 @@ import os, sys
 import os
 import sys
 ``` 
-## Methods/Functions 
+## Methods/Functions/Callables
 
-### Closures 
+See [class functions](#class-methods) as well.
 
- * User-defined functions incur a layer of overhead that hurts performance.
- * Therefore, lambdas and nested functions should be avoided (unless it promotes readability).
+Checkout [Builtin Functions For Collections](#builtin-functions-for-collections) as well.
 
-### Recursion 
-
- * Python does not optimize for recursion.
-
-The for loop is, effectively, the same abstraction that recursion provides in functional programming languages.
-
-```python
-    # Bad
-    arr = map(lambda unit: unit.wanted_field, a_list)
-    
-    # The best
-    arr = [unit.field for unit in a_list]
-```
+ * A callable's body should be no more than four statements.
+ * Predicate methods are encouraged.
 
 ### Arguments/Parameters 
 
  * Your functions should have up to 3 parameters (not including self and kind).
- * Use splat args (\*args) and double splat keyword args (\*\*kwargs) in method definitions to reduce arguments. 
- * Functions should not receive parameters that they are just suppose to pass to another function. 
+ * Use packing syntax (\*args, \*\*kwargs) in method declarations to reduce arguments.
+
+`def func_declaration(*args, **kwargs): pass`
+
+ * Parameters that are only received to pass to other functions should be reduced. 
 
 If you see a parameter untouched being passed to a few functions, try to put that data into an object or closure who will be passed instead.
 
 ```python
-    # Bad
-    funk1(container, key)
-        
+    # Bad        
     def funk1(container, key, erase=True):
         # Do some other actions
         funk2(container, key, erase)
@@ -1069,10 +1065,11 @@ If you see a parameter untouched being passed to a few functions, try to put tha
                 del container[key]
             except KeyError:
                 print "no key:{} to erase".format(key) 
-    
-    # Good
+
+
     funk1(container, key)
-        
+
+    # Good        
     def funk1(container, key, erase=True):
         # Do some other actions
         def erase_later():
@@ -1084,13 +1081,30 @@ If you see a parameter untouched being passed to a few functions, try to put tha
             action()
         except KeyError:
             print "no key:{} to erase".format(key) 
+
+
+    funk1(container, key)
+```
+
+ * Default arguments are encouraged, but DO NOT use mutable objects.
+
+Default arguments are evaluated once only during module load time.
+
+So the same original object will be constatntly used and modified, when you probably intended a new object.
+
+```python
+def action(a_list=[]):
+    a_list.append(1)
+    return a_list
+
+action() # => [1]
+action() # => returned [1,1] when you expected [1]
 ```
 
 ### Parameter Passing
 
  * It is best to be explicit when passing arguments.
-
-Especially boolean options.
+ * Especially boolean options.
 
 This adds readability.
 
@@ -1111,11 +1125,52 @@ save_file(file_name="myfile.txt", log=True)
 
 ### Dynamic Parameter Expansion
 
- * You can pass a dynamic list of parameters by using double splat syntax.
+ * You can pass a dynamic list of parameters by using unpacking syntax.
+
+`func_call(*args, **kwargs)`
+
+### Lambdas and Nested Functions
+
+ * We encourage using closures to create partial applications and the like.
+
+This is especially true when used to add readability to comprehension statements
+
+```python
+# bad
+users_from_nyc = [create_user(user, 'nyc', paid=True)
+                  for user in users]
+
+# good
+create_user_from_nyc = lambda user: create_user(user, 'nyc', paid=True)
+users_from_nyc = [create_user_from_nyc(user) for user in users]
+```
+
+ * Use lambdas for one liners.
+ * If a lambda expression is long (90+ chars) use a nested function.
+ * Prefer existing standard library functions over lambdas.
+
+```python
+# bad
+my_multiply = lambda a,b: a * b
+my_multiply(5,5)
+
+# good
+from operator import mul
+mul(5,5)
+```
+
+### Recursion 
+
+ * Avoid recursion.
+
+The for loop is, effectively, the same abstraction that recursion provides in functional programming languages.
 
 ## Classes 
 
  * When defining a class who does not inherit pass `object` as it's inherit class.
+
+### Class Methods
+
  * It is good practice to use private and protected methods. 
  * Try to make classes as thin as possible.
 
@@ -1145,6 +1200,13 @@ def add(a,b):
     return a + b 
 ```
 
+```python
+    # Bad
+    arr = map(lambda unit: unit.wanted_field, a_list)
+    
+    # The best
+    arr = [unit.field for unit in a_list]
+```
 
 ## Exceptions
 
