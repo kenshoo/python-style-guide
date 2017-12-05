@@ -13,7 +13,8 @@ We **DO NOT** wish the following:
 
 Inspired by many style guides but mainly from [Airbnb](https://github.com/airbnb)'s Style-Guide "style" :-).
 
-**WORK IN PROGRESS. Please be patient.**
+### Why not just read [PEP](https://www.python.org/dev/peps)s?
+You SHOULD read PEPs as they contain the basic foundations for writing Python code - we certainly read it. This Style Guide aims to share our knowledge from reading PEPs and writing Python code in a more summarized way.
 
 ## Table of Contents
 
