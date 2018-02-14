@@ -1168,13 +1168,50 @@ The for loop is, effectively, the same abstraction that recursion provides in fu
 ## Classes 
 
  * When defining a class who does not inherit pass `object` as it's inherit class.
+ * Avoid class attributes. Attributes should be limited to the scope of instances.
+ * Use conventions of encapsulation when defining a class (on methods and attributes).
+
+```python
+class Klass(object):
+    # Public
+    def public_method(self):
+        self.public_attribute
+
+    # Protected
+    def _protected_method(self):
+        self._protected_attribute
+
+    # Private
+    def __private_method(self):
+        self.__private_attribute
+    
+```
+
+ * It is bad practice to add attributes to an instance from outside of that class.
+
+```python
+# bad
+class Person(object): pass
+
+pete = Person()
+pete.name = 'Peter'
+
+# acceptable
+class Person(object):
+    def give_name(self, name):
+        self.name = name
+
+pete = Person()
+pete.give_name('Peter')
+```
 
 ### Class Methods
 
- * It is good practice to use private and protected methods. 
- * Try to make classes as thin as possible.
+As mentioned [above](#classes), use conventions of encapsulation when defining class methods.
 
-Functions which are not under the responsibilities of a class but their logic is used by the class should not be defined in the class. (RDD Responsibility Driven Development) 
+ * Prefer to define private static methods outside of the class in the surrounding scope.  
+
+Functions whom are just implementaion details should not be defined in the class. (RDD Responsibility Driven Development) 
 
 Just put the function in the surrounding scope.
 
@@ -1183,29 +1220,28 @@ Just put the function in the surrounding scope.
 class Person(object):
     def eat(self, food):
         ...
-        self.calories = self.add(self.calories, food.calories)
+        self.calories = self._add(self.calories, food.calories)
         ...
     
-    def add(self, a,b):
+    @staticmethod
+    def _add(a, b):
         return a + b
+
+pete = Person()
+pete._add(11, 12) # => 23
         
 # good
 class Person(object):
     def eat(self, food):
         ...
-        self.calories = add(self.calories, food.calories)
+        self.calories = _add(self.calories, food.calories)
         ...
     
-def add(a,b):
-    return a + b 
-```
+def _add(a,b):
+    return a + b
 
-```python
-    # Bad
-    arr = map(lambda unit: unit.wanted_field, a_list)
-    
-    # The best
-    arr = [unit.field for unit in a_list]
+pete = Person()
+pete._add(11, 12) # => AttributeError
 ```
 
 ## Exceptions
