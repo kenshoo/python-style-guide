@@ -22,7 +22,7 @@ It therefore reflects our own conclusions and preferences.
 ## Table of Contents
 
   1. [PEP 20](#pep-20)
-  1. [Genaral](#general)
+  1. [General](#general)
   1. [Naming](#naming)
   1. [Code Layout](#code-layout)
      * [Indentation](#indentation)
