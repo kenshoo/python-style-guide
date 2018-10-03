@@ -204,6 +204,8 @@ end
 
 ## Conditional Expressions
 
+ * Prefer to check positive statements vs negative statements
+
 ### Flow
 
  * `if/else` blocks should handle the least amount of logic first
