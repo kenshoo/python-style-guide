@@ -528,9 +528,13 @@ If you see a parameter untouched being passed to a few functions, try to put tha
     # Bad
     def funk1(container, key, erase=True):
         # Do some other actions
-        funk2(container, key, erase)
+        funk2("value", container, key, erase)
 
-    def funk2(container, key, erase):
+    def funk2(funk2_param, container, key, erase=True):
+        # Do some other actions
+        funk3(container, key, erase)
+
+    def funk3(container, key, erase):
         if erase:
             try:
                 del container[key]
@@ -545,13 +549,36 @@ If you see a parameter untouched being passed to a few functions, try to put tha
         # Do some other actions
         def erase_later():
             if erase: del container[key]
-        funk2(erase_later)
+        funk2("value", erase_later)
 
-    def funk2(action):
+    def funk2(funk2_param, action):
+        # Do some other actions
+        funk3(action)
+
+    def funk3(action):
         try:
             action()
         except KeyError:
             print "no key:{} to erase".format(key)
+
+
+    funk1(container, key)
+
+    # Even better
+    def funk1(container, key, erase=True):
+        # Do some other actions
+        funk2("value", container=container, key=key, erase=True)
+
+    def funk2(funk2_param, **funk3_params):
+        # Do some other actions
+        funk3(**funk3_params)
+
+    def funk3(container, key, erase):
+        if erase:
+            try:
+                del container[key]
+            except KeyError:
+                print "no key:{} to erase".format(key)
 
 
     funk1(container, key)
