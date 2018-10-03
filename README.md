@@ -37,6 +37,12 @@ It therefore reflects our own conclusions and preferences.
   1. [Strings](#strings)
      * [Double vs Single Quotes](#double-vs-single-quotes)
      * [Concatenation](#concatenation)
+  1. [Methods, Functions, and Callables](#methodsfunctionscallables)
+     * [Arguments/Parameters](#argumentsparameters)
+     * [Parameter Passing](#parameter-passing)
+     * [Dynamic Parameter Expansion](#dynamic-parameter-expansion)
+     * [Lambdas and Nested Functions](#lambdas-and-nested-functions)
+     * [Recursion](#recursion)
   1. [Collections/Iterables](#collectionsiterables)
      * [Slice](#slice)
      * [Comprehensions](#comprehensions)
@@ -44,12 +50,6 @@ It therefore reflects our own conclusions and preferences.
      * [Tuples](#tuples)
      * [Tuple vs List](#tuple-vs-list)
   1. [Imports](#imports)
-  1. [Methods, Functions, and Callables](#methodsfunctionscallables)
-     * [Arguments/Parameters](#argumentsparameters)
-     * [Parameter Passing](#parameter-passing)
-     * [Dynamic Parameter Expansion](#dynamic-parameter-expansion)
-     * [Lambdas and Nested Functions](#lambdas-and-nested-functions)
-     * [Recursion](#recursion)
   1. [Classes](#classes)
      * [Class Methods](#class-methods)
   1. [Exceptions](#exceptions)
@@ -503,6 +503,147 @@ for i in a_list:
 # good
 ''.join(i for in a_list)
 ```
+
+## Methods/Functions/Callables
+
+See [class functions](#class-methods) as well.
+
+Checkout [Builtin Functions For Collections](#builtin-functions-for-collections) as well.
+
+ * A callable's body should be no more than four statements.
+ * Predicate methods are encouraged.
+
+### Arguments/Parameters
+
+ * Your functions should have up to 3 parameters (not including self and kind).
+ * Use packing syntax (\*args, \*\*kwargs) in method declarations to reduce arguments.
+
+`def func_declaration(*args, **kwargs): pass`
+
+ * Parameters that are only received to pass to other functions should be reduced.
+
+If you see a parameter untouched being passed to a few functions, try to put that data into an object or closure who will be passed instead.
+
+```python
+    # Bad
+    def funk1(container, key, erase=True):
+        # Do some other actions
+        funk2(container, key, erase)
+
+    def funk2(container, key, erase):
+        if erase:
+            try:
+                del container[key]
+            except KeyError:
+                print "no key:{} to erase".format(key)
+
+
+    funk1(container, key)
+
+    # Good
+    def funk1(container, key, erase=True):
+        # Do some other actions
+        def erase_later():
+            if erase: del container[key]
+        funk2(erase_later)
+
+    def funk2(action):
+        try:
+            action()
+        except KeyError:
+            print "no key:{} to erase".format(key)
+
+
+    funk1(container, key)
+```
+
+ * Default arguments are encouraged, but DO NOT use mutable objects.
+
+Default arguments are evaluated once only during module load time.
+
+So the same original object will be constantly used and modified, when you probably intended a new object.
+
+```python
+def action(a_list=[]):
+    a_list.append(1)
+    return a_list
+
+action() # => [1]
+action() # => returned [1,1] when you expected [1]
+```
+
+ * Do not use a statement/expression (something to be evaluated) within an argument list
+
+
+```python
+# Very bad
+def funktion(a, b=mod.get_list()):
+  pass
+```
+
+### Parameter Passing
+
+ * It is best to be explicit when passing arguments.
+ * Especially boolean options.
+
+This adds readability.
+
+```python
+def save_file(file_name, log):
+    if log:
+        print("Saving file {}".format(file_name))
+    ...
+# Very Bad
+save_file("myfile.txt", True)
+
+# Good
+save_file("myfile.txt", log=True)
+
+# Better
+save_file(file_name="myfile.txt", log=True)
+```
+
+### Dynamic Parameter Expansion
+
+ * You can pass a dynamic list of parameters by using unpacking syntax.
+
+`func_call(*args, **kwargs)`
+
+### Lambdas and Nested Functions
+
+ * We encourage using closures to create partial applications and the like.
+
+This is especially true when used to add readability to comprehension statements
+
+```python
+# bad
+users_from_nyc = [create_user(user, 'nyc', paid=True)
+                  for user in users]
+
+# good
+create_user_from_nyc = lambda user: create_user(user, 'nyc', paid=True)
+users_from_nyc = [create_user_from_nyc(user) for user in users]
+```
+
+ * Use lambdas for one liners.
+ * If a lambda expression is long (90+ chars) use a nested function.
+ * Prefer existing standard library functions over lambdas.
+
+```python
+# bad
+my_multiply = lambda a,b: a * b
+my_multiply(5,5)
+
+# good
+from operator import mul
+mul(5,5)
+```
+
+### Recursion
+
+ * Avoid recursion.
+
+The for loop is, effectively, the same abstraction that recursion provides in functional programming languages.
 
 ## Collections/Iterables
 
@@ -1039,146 +1180,6 @@ import os, sys
 import os
 import sys
 ```
-## Methods/Functions/Callables
-
-See [class functions](#class-methods) as well.
-
-Checkout [Builtin Functions For Collections](#builtin-functions-for-collections) as well.
-
- * A callable's body should be no more than four statements.
- * Predicate methods are encouraged.
-
-### Arguments/Parameters
-
- * Your functions should have up to 3 parameters (not including self and kind).
- * Use packing syntax (\*args, \*\*kwargs) in method declarations to reduce arguments.
-
-`def func_declaration(*args, **kwargs): pass`
-
- * Parameters that are only received to pass to other functions should be reduced.
-
-If you see a parameter untouched being passed to a few functions, try to put that data into an object or closure who will be passed instead.
-
-```python
-    # Bad
-    def funk1(container, key, erase=True):
-        # Do some other actions
-        funk2(container, key, erase)
-
-    def funk2(container, key, erase):
-        if erase:
-            try:
-                del container[key]
-            except KeyError:
-                print "no key:{} to erase".format(key)
-
-
-    funk1(container, key)
-
-    # Good
-    def funk1(container, key, erase=True):
-        # Do some other actions
-        def erase_later():
-            if erase: del container[key]
-        funk2(erase_later)
-
-    def funk2(action):
-        try:
-            action()
-        except KeyError:
-            print "no key:{} to erase".format(key)
-
-
-    funk1(container, key)
-```
-
- * Default arguments are encouraged, but DO NOT use mutable objects.
-
-Default arguments are evaluated once only during module load time.
-
-So the same original object will be constantly used and modified, when you probably intended a new object.
-
-```python
-def action(a_list=[]):
-    a_list.append(1)
-    return a_list
-
-action() # => [1]
-action() # => returned [1,1] when you expected [1]
-```
-
- * Do not use a statement/expression (something to be evaluated) within an argument list
-
-
-```python
-# Very bad
-def funktion(a, b=mod.get_list()):
-  pass
-```
-
-### Parameter Passing
-
- * It is best to be explicit when passing arguments.
- * Especially boolean options.
-
-This adds readability.
-
-```python
-def save_file(file_name, log):
-    if log:
-        print("Saving file {}".format(file_name))
-    ...
-# Very Bad
-save_file("myfile.txt", True)
-
-# Good
-save_file("myfile.txt", log=True)
-
-# Better
-save_file(file_name="myfile.txt", log=True)
-```
-
-### Dynamic Parameter Expansion
-
- * You can pass a dynamic list of parameters by using unpacking syntax.
-
-`func_call(*args, **kwargs)`
-
-### Lambdas and Nested Functions
-
- * We encourage using closures to create partial applications and the like.
-
-This is especially true when used to add readability to comprehension statements
-
-```python
-# bad
-users_from_nyc = [create_user(user, 'nyc', paid=True)
-                  for user in users]
-
-# good
-create_user_from_nyc = lambda user: create_user(user, 'nyc', paid=True)
-users_from_nyc = [create_user_from_nyc(user) for user in users]
-```
-
- * Use lambdas for one liners.
- * If a lambda expression is long (90+ chars) use a nested function.
- * Prefer existing standard library functions over lambdas.
-
-```python
-# bad
-my_multiply = lambda a,b: a * b
-my_multiply(5,5)
-
-# good
-from operator import mul
-mul(5,5)
-```
-
-### Recursion
-
- * Avoid recursion.
-
-The for loop is, effectively, the same abstraction that recursion provides in functional programming languages.
 
 ## Classes
 
