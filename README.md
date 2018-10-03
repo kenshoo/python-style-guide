@@ -274,9 +274,9 @@ if condition:
 
 ```python
 # bad
-if (name == 'bob'
-    and l_name == 'samuels'):
-    ...
+if name == 'bob':
+        if l_name == 'samuels':
+            ...
 
 # good
 if (name == 'bob' and
