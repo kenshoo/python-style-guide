@@ -275,8 +275,8 @@ if condition:
 ```python
 # bad
 if name == 'bob':
-        if l_name == 'samuels':
-            ...
+    if l_name == 'samuels':
+        ...
 
 # good
 if (name == 'bob' and
