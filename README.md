@@ -517,6 +517,21 @@ Checkout [Builtin Functions For Collections](#builtin-functions-for-collections)
 
  * Your functions should have up to 3 parameters (not including self and kind).
  * Use packing syntax (\*args, \*\*kwargs) in method declarations to reduce arguments.
+ * When packing arguments, pack those who are most related to eachother and provide a meanigful name.
+
+```python
+# Bad
+def post_answer(**kwargs):
+    requests.post(kwargs['host'] + kwargs['path'], json=kwargs['body'])
+
+# Still not good
+def post_answer(host, path, **kwargs):
+    requests.post(host + path, json=kwargs)
+
+# Good
+def post_answer(host, path, **body):
+    requests.post(host + path, json=body)
+```
 
 `def func_declaration(*args, **kwargs): pass`
 
@@ -551,9 +566,11 @@ If you see a parameter untouched being passed to a few functions, try to put tha
             if erase: del container[key]
         funk2("value", erase_later)
 
+
     def funk2(funk2_param, action):
         # Do some other actions
         funk3(action)
+
 
     def funk3(action):
         try:
