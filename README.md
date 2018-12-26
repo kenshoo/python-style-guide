@@ -533,8 +533,6 @@ def post_answer(host, path, **body):
     requests.post(host + path, json=body)
 ```
 
-`def func_declaration(*args, **kwargs): pass`
-
  * Parameters that are only received to pass to other functions should be reduced.
 
 If you see a parameter untouched being passed to a few functions, try to put that data into an object or closure who will be passed instead.
