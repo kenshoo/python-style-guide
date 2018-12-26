@@ -517,7 +517,7 @@ Checkout [Builtin Functions For Collections](#builtin-functions-for-collections)
 
  * Your functions should have up to 3 parameters (not including self and kind).
  * Use packing syntax (\*args, \*\*kwargs) in method declarations to reduce arguments.
- * When packing arguments, pack those who are most related to eachother and provide a meanigful name.
+ * When packing arguments, pack those who are most related to each other and provide a meaningful name.
 
 ```python
 # Bad
