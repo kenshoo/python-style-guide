@@ -696,7 +696,7 @@ slicing, comprehensions, and utilizing builtin functions.
 The purpose of this writing is to automatically associate our collection solutions with
 these three tools.
 
-Pushing us away fro using code as such:
+Pushing us away from using code as such:
 
 ```python
     # Bad
