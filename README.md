@@ -928,7 +928,7 @@ people_who_know_bob = [person
  * Consider using generators to maintain readability
 
 ```python
-groups [
+groups = [
     ["sara", "sally", "bob"],
     ["todd", "gary", "jon"],
     ["sue", "jerry", "bob"]
