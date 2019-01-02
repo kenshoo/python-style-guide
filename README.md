@@ -858,7 +858,7 @@ Many times we construct lists just to produce another list in order to use that 
 Generators reduce how many times we iterate over the same object.
 
 ```python
-groups [
+groups = [
     ["sara", "sally", "bob"],
     ["todd", "gary", "jon"],
     ["sue", "jerry", "bob"]
@@ -896,7 +896,7 @@ invite_bobs_friends(people_who_know_bob_excluding_bob)
  * Avoid using over 2 statements within list comprehension
 
 ```python
-groups [
+groups = [
     ["sara", "sally", "bob"],
     ["todd", "gary", "jon"],
     ["sue", "jerry", "bob"]
