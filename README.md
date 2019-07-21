@@ -1263,13 +1263,23 @@ pete = Person()
 pete.give_name('Peter')
 ```
 
+ * Private attributes are preferably defined with only one underscore instead of two.
+
+Double underscores trigger name mangling. This makes debugging more difficult.
+
+```python
+class Person(object):
+    def __init__(self, name):
+        self._private_name = name
+```
+
 ### Class Methods
 
 As mentioned [above](#classes), use conventions of encapsulation when defining class methods.
 
  * Prefer to define private static methods outside of the class in the surrounding scope.
 
-Functions whom are just implementaion details should not be defined in the class. (RDD Responsibility Driven Development)
+Functions whom are just implementaion details should not be defined in the class. 
 
 Just put the function in the surrounding scope.
 
