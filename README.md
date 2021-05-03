@@ -579,10 +579,10 @@ If you see a parameter untouched being passed to a few functions, try to put tha
 
     funk1(container, key)
 
-    # Even better
+    # Also good
     def funk1(container, key, erase=True):
         # Do some other actions
-        funk2("value", container=container, key=key, erase=True)
+        funk2("value", container=container, key=key, erase=erase)
 
     def funk2(funk2_param, **funk3_params):
         # Do some other actions
