@@ -476,7 +476,7 @@ if name is BOB:
 ### Concatenation
 
  * Prefer string formatting over string concatenation.
- * When formatting prefer mapped formatting ("hi {name}")
+ * When formatting prefer fstrings over `str#format` (f"hi {name}")
 
 Besides for being cleaner this optimizes performance (less work for GC)
 
@@ -489,6 +489,9 @@ email_with_name = "{} <{}>".format(user.name, user.email)
 
 # better
 email_with_name = "{name} <{mail}>".format(name=user.name, mail=user.email)
+
+# best
+email_with_name = f"{user.name} <{user.mail}>"
 
 ```
 
