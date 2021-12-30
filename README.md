@@ -98,8 +98,8 @@ for word in screaming_list:
 ```
 
 
- * Throwaway variables should named with an underscore (`_`).
- * If you feel the need to describe the variable start the name with a variable.
+ * Throwaway variables should be named with an underscore (`_`).
+ * If you feel the need to describe the variable, then name the variable using a leading underscore.
 
 ```python
 for _ in range(4):
@@ -187,7 +187,7 @@ class Foo(object):
  * Use a single empty line to break between statements to break up methods into logical paragraphs internally.
 
 ```python
-def transformorize(self,_car):
+def transformorize(self, _car):
   car = manufacture(options)
   t = transformer(robot, disguise)
 
@@ -197,7 +197,6 @@ def transformorize(self,_car):
 
   fleet.add(car)
   return car
-end
 ```
 
  * End each file with a newline. Don't include multiple newlines at the end of a file.
