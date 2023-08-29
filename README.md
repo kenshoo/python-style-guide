@@ -122,7 +122,7 @@ for _number in range(4):
 def create_translation(phrase_id, phrase_key, target_locale,
                         value, user_id, do_xss_check, allow_verification)
     ...
-hiii i am using git fork
+
 # good
 def create_translation(phrase_id,
                         phrase_key,
