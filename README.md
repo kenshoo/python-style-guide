@@ -1,5 +1,5 @@
 # python-style-guide
-This is Kenshoo's Python Style Guide. Using this style guide we hope to acheive the following:
+This is Skai's Python Style Guide. Using this style guide we hope to acheive the following:
 
 1. Humbly share our knowledge & expeience with the world (and some of our pain too).
 1. Assist novice/intermediate developers.
