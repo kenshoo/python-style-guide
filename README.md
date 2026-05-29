@@ -1401,52 +1401,6 @@ has_wanted_key(a_dict, a_key)
  * Within a project define a base exception for all other custom exceptions to inherit from.
  * All exceptions should be grouped together in an exceptions module `app.lib.exceptions.*`
 
-## Regular Expressions
-
- * Use single quote raw strings (`r'.+'`) for regex values.
-
-Raw strings preserve escape characters.
-
-This will save you from unexpected behavior.
-
- * Avoid star wild cards `*`, use plus `+` instead.
-
-Bugs are caused because `*` also allows for zero occurrences.
-
- * Complex regex should be compiled before using.
-
-The resulting variable's name should clearly define it's purpose.
-
-```python
-# Bad
-pattern = re.match(r'(?:3[01])|(?:[0-2]\d)-(?:1[0-2])|(?:0\d)-\d{4}$', '31-11-1985')
-pattern.match('31-11-1985')
-
-# Good
-valid_date_pattern = re.compile(r'(?:3[01])|(?:[0-2]\d)-(?:1[0-2])|(?:0\d)-\d{4}$')
-valid_date_pattern.match('31-11-1985')
-```
-
-### Usage
-
- * Regex is not preferable in python.
-
-There are plenty of tools which are preferred (i.e. `in`, `startswith`, `endswith`, `isdigit`, `istitle`, and more).
-
-```python
-# Bad
-is_bob_pattern = re.compile(r'^Bob')
-is_bob_pattern.match(name)
-
-has_a_qu_pattern = re.compile(r'qu', re.I)
-has_a_qu_pattern.match(word)
-
-# Good
-name.startswith('Bob')
-
-'qu' in word.lowercase()
-```
-
 
 ## Main Contributers:
 * [Avraf](https://github.com/avraf)
